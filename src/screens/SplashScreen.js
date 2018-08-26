@@ -9,7 +9,7 @@ import styles from '../styles/SplashStyle';
 // Actions
 import * as loginActions from '../reducers/auth/actions';
 import { 
-  SIGNED,NOT_SIGNED,
+  SIGNED, NOT_SIGNED, NOT_CONNECTED
 } from '../reducers/nav/actionTypes'
 
 
@@ -40,7 +40,7 @@ class SplashScreen extends Component{
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isLoggedIn, goToMain, goToSignIn } = nextProps;
+    const { isLoggedIn, goToMain, goToSignIn, goToBluetooth } = nextProps;
 
     isLoggedIn ? goToMain() : goToSignIn()
   }
@@ -61,6 +61,7 @@ export default connect(
   (dispatch) => ({
       LoginActions: bindActionCreators(loginActions, dispatch),
       goToMain: () => dispatch({ type: SIGNED}),
+      goToBluetooth: () => dispatch({ type: NOT_CONNECTED }),
       goToSignIn: () => dispatch({ type: NOT_SIGNED}),
   })
 )(SplashScreen);

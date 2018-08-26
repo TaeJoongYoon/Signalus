@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 // Elements
 import {
-  View, Button, Animated, Text
+  View, Button, Animated, Text, Keyboard
 } from 'react-native';
 import CustomFormInput from '../components/CustomFormInput';
 import CustomFormPicker from '../components/CustomFormPicker';
@@ -150,7 +150,7 @@ class RegisterScreen extends Component{
             title={LabelAge}
             value={this.state.age}
             placeholder={PlaceholderAge}
-            onPress={() => this.setState({modal: true, mode: ModeAge})}
+            onPress={() => {this.setState({modal: true, mode: ModeAge}), Keyboard.dismiss()}}
             error={false}
             errorMsg={ErrorMsgAge}
           />
@@ -160,7 +160,7 @@ class RegisterScreen extends Component{
             title={LabelSex}
             value={this.state.gender}
             placeholder={PlaceholderSex}
-            onPress={() => this.setState({modal: true, mode: ModeSex})}
+            onPress={() => {this.setState({modal: true, mode: ModeSex}), Keyboard.dismiss()}}
             error={false}
             errorMsg={ErrorMsgSex}
           />
@@ -170,7 +170,7 @@ class RegisterScreen extends Component{
             title={LabelHeight}
             value={this.state.height}
             placeholder={PlaceholderHeight}
-            onPress={() => this.setState({modal: true, mode: ModeHeight})}
+            onPress={() => {this.setState({modal: true, mode: ModeHeight}), Keyboard.dismiss()}}
             error={false}
             errorMsg={ErrorMsgHeight}
           />
@@ -180,7 +180,7 @@ class RegisterScreen extends Component{
             title={LabelWeight}
             value={this.state.weight}
             placeholder={PlaceholderWeight}
-            onPress={() => this.setState({modal: true, mode: ModeWeight})}
+            onPress={() => {this.setState({modal: true, mode: ModeWeight}), Keyboard.dismiss()}}
             error={false}
             errorMsg={ErrorMsgWeight}
           />

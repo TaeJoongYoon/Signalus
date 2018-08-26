@@ -1,32 +1,140 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { BleManager } from 'react-native-ble-plx';
+import { Buffer } from 'buffer';
+import update from 'react-addons-update';
+// Elements
 import {
-  View,
-  Text
+  View, Text
 } from 'react-native';
 import CustomChart from '../components/CustomChart';
-import update from 'react-addons-update';
+// String
+import { 
+  targetDeviceName,
+  heartRateMeasurementUUID, bodySensorLocationUUID, batteryLevelUUID, deviceInfoUUID,
+ } from '../constants/string';
+
+const base64ToDec = (value) => new Buffer(value, 'base64').toString('hex')
 
 class VitalScreen extends Component{
   constructor(props){
     super(props)
-    this.state= {
-      data: [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ],
-    }
+    this.manager = new BleManager()
+    this.targetDeviceName = targetDeviceName
+    this.state = {
+      data: [],
+      connected: false,
+      error: false,
+      errorMsg: '',
+    };
   }
 
   componentDidMount(){
-    console.log("Start");
-    setInterval(()=>{
-      let a = Math.floor(Math.random() * 200) + 1;
-      this.setState({
-        data: update(
-                  this.state.data, 
-                  {
-                    $push: [a],
-                    $splice: [[0, 1]]
-                  }),
+    const subscription = this.manager.onStateChange((state) => {
+      if (state === 'PoweredOn') {
+        this._scan();
+        subscription.remove();
+      }
+    }, true);
+  }
+
+  _scan = () => {
+    this.manager.startDeviceScan(null,
+                                 null, (error, device) => {
+
+      if (error) {
+        this.setState({error: true, errorMsg: error.message})
+        return
+      }
+
+      if (device.name === this.targetDeviceName) {
+        this.manager.stopDeviceScan()
+        this._connectToDevice(device);
+      }
+    });
+  }
+
+
+  _connectToDevice = (device) => {
+    device
+      .connect()
+      .then((device) => {
+        this.setState({connected: true});
+        this._device = device;
+        return device.discoverAllServicesAndCharacteristics();
       })
-    },100)
+      .then((device) => {
+        return device.services();
+      })
+      .then((services) => {
+        for (const service of services) {
+          console.log("Service UUID : " + service.uuid); // Services List
+          service.characteristics().then((characteristics) => {
+            this._characteristics = characteristics;
+            this._readAndNotify(service);
+          });
+        }
+      });
+  }
+
+  _readAndNotify = (service) => {
+    for (const characteristic of this._characteristics) {
+      console.log(`
+      Service UUID : ${service.uuid}
+      Characteristic UUID : ${characteristic.uuid}
+                 Read : ${characteristic.isReadable}
+                 Notify : ${characteristic.isNotifiable}
+                 Indicatable : ${characteristic.isIndicatable}`); // Characteristic Info
+      if(characteristic.isReadable) this._readCharacteristic(characteristic);
+      if(characteristic.isNotifiable) this._notifyCharacteristc(characteristic);
+    }
+  }
+ 
+  _readCharacteristic = (characteristic) => {
+    characteristic
+      .read()
+      .then((c) => {
+        const v = base64ToDec(c.value);
+        const value = parseInt(v, 16)
+        console.log(`---------------------------------------------------
+        Characteristic UUID : ${characteristic.uuid}
+        Read Value : ${value}`); // Read Value
+      });
+  }
+
+  _notifyCharacteristc = (characteristic) => {
+    if(characteristic.uuid == heartRateMeasurementUUID){
+      characteristic.monitor((error, c) => {
+        if(error) this.setState({error: true, errorMsg: error.message})
+        if(c){
+          const v = base64ToDec(c.value);
+          const value = parseInt(v, 16)
+          console.log(`---------------------------------------------------
+          Characteristic UUID : ${characteristic.uuid}
+          Notify Value : ${value}`);
+
+          if(this.state.data.length > 100){
+            this.setState({
+              data: update(
+                        this.state.data, 
+                        {
+                          $push: [value],
+                          $splice: [[0, 1]]
+                        }
+              )});
+          }
+          else{
+          this.setState({
+            data: update(
+                      this.state.data, 
+                      {
+                          $push: [value]
+                      }
+            )});
+          }
+        }
+      });
+    }
   }
 
   render(){
@@ -38,4 +146,12 @@ class VitalScreen extends Component{
   }
 }
 
-export default VitalScreen;
+
+export default connect(
+  (state) => ({
+    device : state.bluetooth.device,
+  }),
+  (dispatch) => ({
+
+  })
+)(VitalScreen);
