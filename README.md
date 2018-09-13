@@ -1,3 +1,3 @@
-# ReactNative_Signalus
+# Signalus
 
 Developing...
