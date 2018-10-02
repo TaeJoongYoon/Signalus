@@ -15,7 +15,7 @@ import SymptomDetailScreen from '../screens/SymptomDetailScreen';
 // Main-Profile
 
 
-import { backgroundColor, headerTintColor } from '../constants/color';
+import { headerTintColor, mainColor } from '../constants/color';
 
 const RootNavigator = createStackNavigator({
   Splash: { screen: SplashScreen },
@@ -33,7 +33,7 @@ const RootNavigator = createStackNavigator({
   navigationOptions: {
     title: 'Signalus',
     headerStyle: {
-      backgroundColor: backgroundColor,
+      backgroundColor: mainColor,
       borderBottomWidth: 0,
     },
     headerTintColor: headerTintColor,

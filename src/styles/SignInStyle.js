@@ -1,5 +1,5 @@
 import {  StyleSheet, } from 'react-native';
-import { WIDTH, HEIGHT } from '../constants/dimens';
+import { WIDTH, HEIGHT, borderRadius } from '../constants/dimens';
 import { backgroundColor, mainColor, disable } from '../constants/color';
 
 const styles = StyleSheet.create({
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
   input: {
     alignItems: 'center',
-    width: WIDTH * 0.9,
+    width: WIDTH * 0.85,
     height: HEIGHT * 0.1,
   },
   icon: {
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     backgroundColor: mainColor,
     width: WIDTH * 0.85,
     height: HEIGHT * 0.08,
-    borderRadius:10,
+    borderRadius: borderRadius,
   },
   loginDisable: {
     flexDirection: 'column',
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     backgroundColor: disable,
     width: WIDTH * 0.85,
     height: HEIGHT * 0.08,
-    borderRadius:10,
+    borderRadius: borderRadius,
   },
   find:{
     flexDirection: 'column',
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: WIDTH * 0.85,
     height: HEIGHT * 0.08,
-    borderRadius: 10,
+    borderRadius: borderRadius,
     borderWidth: 1,
     borderColor: mainColor
   },

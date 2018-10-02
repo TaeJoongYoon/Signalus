@@ -12,13 +12,11 @@ class CustomDevicesItem extends Component {
     return(
         <View style={style}>
           <TouchableOpacity onPress={onPress}>
-          <Text
-            pointerEvents='none'
-          >
-          {title}
-          </Text>
-        </TouchableOpacity>
-        
+            <Text
+              pointerEvents='none'>
+            {title}
+            </Text>
+          </TouchableOpacity>
         </View>
       );
   }

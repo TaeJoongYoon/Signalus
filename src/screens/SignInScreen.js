@@ -3,9 +3,11 @@ import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 // Elements
 import {
- Image, View, Text, Button, TouchableOpacity
+ Image, View, Text, TouchableOpacity
 } from 'react-native';
 import CustomFormInput from '../components/CustomFormInput';
+import CustomFilledButton from '../components/CustomFilledButton';
+import CustomBorderedButton from '../components/CustomBorderedButton';
 import styles from '../styles/SignInStyle';
 import { defaultMinLength } from '../constants/dimens';
 // Actions
@@ -85,6 +87,7 @@ class SignInScreen extends Component{
         <CustomFormInput 
           style={styles.input}
           iconStyle={styles.icon}
+          isIcon={true}
           type="ID"
           placeholder={PlaceholderId}
           onChangeText={(id) => this.setState({id})}
@@ -98,6 +101,7 @@ class SignInScreen extends Component{
         <CustomFormInput
           style={styles.input}
           iconStyle={styles.icon}
+          isIcon={true}
           type="PW"
           placeholder={PlaceholderPassword}
           onChangeText={(password) => this.setState({password})}
@@ -109,17 +113,12 @@ class SignInScreen extends Component{
         />
 
         {/* SignIn Button */}
-        <View style={(this.state.id.length==0 && this.state.password.length==0) ? styles.loginDisable : styles.loginEnable}>
-          <TouchableOpacity
-            disabled={(this.state.id.length==0 && this.state.password.length==0)}
-            onPress={() => this._login()}>
-            <Text
-              style={{fontWeight: 'bold', color: 'white', fontSize: 20}}
-              pointerEvents='none'>
-            {LabelSignIn}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <CustomFilledButton
+          style={(this.state.id.length==0 && this.state.password.length==0) ? styles.loginDisable : styles.loginEnable}
+          title={LabelSignIn}
+          disabled={(this.state.id.length==0 && this.state.password.length==0)}
+          onPress={() => this._login()}
+        />
         
         {/* Find Button */}
         <View style={styles.find}> 
@@ -134,16 +133,11 @@ class SignInScreen extends Component{
         </View>
         
         {/* Register Button */}
-        <View style={styles.register}>
-          <TouchableOpacity
-            onPress={goToConsent}>
-            <Text
-              style={{fontWeight: 'bold', color: mainColor, fontSize: 20}}
-              pointerEvents='none'>
-            {LabelRegister}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <CustomBorderedButton
+          style={styles.register}
+          title={LabelRegister}
+          onPress={goToConsent}
+        />
         
       </View>
     );

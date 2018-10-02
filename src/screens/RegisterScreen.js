@@ -3,11 +3,12 @@ import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 // Elements
 import {
-  View, Button, Animated, Text, Keyboard
+  View, Animated, Text, Keyboard
 } from 'react-native';
 import CustomFormInput from '../components/CustomFormInput';
 import CustomFormPicker from '../components/CustomFormPicker';
 import CustomPicker from '../components/CustomPicker';
+import CustomFilledButton from '../components/CustomFilledButton';
 import styles from '../styles/RegisterStyle';
 import { HEIGHT, defaultMinLength } from '../constants/dimens';
 // Actions
@@ -15,18 +16,24 @@ import * as registerActions from '../reducers/auth/actions';
 import { SIGNED } from '../reducers/nav/actionTypes'
 // Strings
 import {
-  LabelId, LabelPassword, LabelAge, LabelSex, LabelHeight, LabelWeight, LabelRegister,
-  PlaceholderId, PlaceholderPassword, PlaceholderAge, PlaceholderSex,PlaceholderHeight, PlaceholderWeight,
-  ErrorMsgId, ErrorMsgPassword, ErrorMsgAge, ErrorMsgSex, ErrorMsgHeight, ErrorMsgWeight, ErrorMsgRegister,
+  HeaderRegister, LabelRegister, LabelRegisterTitle,
+  PlaceholderId, PlaceholderPasswordRegister, PlaceholderPasswordCheck, PlaceholderAge, PlaceholderSex,PlaceholderHeight, PlaceholderWeight,
+  ErrorMsgId, ErrorMsgPasswordRegister, ErrorMsgPasswordCheck, ErrorMsgRegister,
   ModeAge, ModeSex, ModeHeight, ModeWeight
 } from '../constants/string';
 
 class RegisterScreen extends Component{
+  static navigationOptions = {
+    title: HeaderRegister,
+    headerBackTitle: null,
+  };
+
   constructor(props){
     super(props)
     this.state= {
       id: '',
       password: '',
+      password2: '',
       age: 0,
       gender: '',
       height: 0,
@@ -36,9 +43,11 @@ class RegisterScreen extends Component{
       mode: '',
       idError:false,
       pwError:false,
+      chkError:false,
     }
   }
 
+  // Functions
   _changeValue = (value) => {
     this.setState({value})
 
@@ -98,19 +107,22 @@ class RegisterScreen extends Component{
 
   _register = () => {
     const { RegisterActions } = this.props;
-    this.setState({idError:false, pwError:false})
+    this.setState({idError: false, pwError: false, chkError: false})
 
-    if(this.state.id.length >= 8 && this.state.password.length >= 8){ // Check Id and Password
-      try{
-        RegisterActions.register(this.state.id, this.state.password, this.state.age, this.state.gender, this.state.height, this.state.weight)
-      }catch(e){}
-    } else if(this.state.id.length < defaultMinLength){
+    if(this.state.id.length < defaultMinLength){   // Check Id and Password
       this.setState({idError: true})
     } else if(this.state.password.length < defaultMinLength){
       this.setState({pwError: true})
+    } else if(this.state.password != this.state.password2){
+      this.setState({chkError: true})
+    } else{
+      try{
+        RegisterActions.register(this.state.id, this.state.password, this.state.age, this.state.gender, this.state.height, this.state.weight)
+      }catch(e){}
     }
   }
 
+  // LifeCycle
   componentWillReceiveProps(nextProps) {
     const { goToMain, isLoggedIn } = nextProps;
     
@@ -123,10 +135,14 @@ class RegisterScreen extends Component{
     const { error } = this.props;
     return(
       <View style={styles.container}>
+        <Text style={styles.title}>  
+          {LabelRegisterTitle}
+        </Text>
         <View style={styles.contents}>
+
+          {/* ID Form */}
           <CustomFormInput 
             style={styles.input}
-            title={LabelId}
             placeholder={PlaceholderId}
             onChangeText={(id) => this.setState({id})}
             maxLength={20}
@@ -134,79 +150,91 @@ class RegisterScreen extends Component{
             errorMsg={ErrorMsgId}
           />
 
+          {/* PW Form */}
           <CustomFormInput
             style={styles.input}
-            title={LabelPassword}
-            placeholder={PlaceholderPassword}
+            placeholder={PlaceholderPasswordRegister}
             onChangeText={(password) => this.setState({password})}
             clearTextOnFocus={true}
             secureTextEntry={true}
             error={this.state.pwError}
-            errorMsg={ErrorMsgPassword}
+            errorMsg={ErrorMsgPasswordRegister}
+          />
+
+          {/* PW Check Form */}
+          <CustomFormInput
+            style={styles.input}
+            placeholder={PlaceholderPasswordCheck}
+            onChangeText={(password2) => this.setState({password2})}
+            clearTextOnFocus={true}
+            secureTextEntry={true}
+            error={this.state.chkError}
+            errorMsg={ErrorMsgPasswordCheck}
           />
           
+          {/* Age Picker */}
           <CustomFormPicker
             style={styles.input}
-            title={LabelAge}
             value={this.state.age}
             placeholder={PlaceholderAge}
             onPress={() => {this.setState({modal: true, mode: ModeAge}), Keyboard.dismiss()}}
-            error={false}
-            errorMsg={ErrorMsgAge}
           />
 
+          {/* Sex Picker */}
           <CustomFormPicker
             style={styles.input}
-            title={LabelSex}
             value={this.state.gender}
             placeholder={PlaceholderSex}
             onPress={() => {this.setState({modal: true, mode: ModeSex}), Keyboard.dismiss()}}
-            error={false}
-            errorMsg={ErrorMsgSex}
           />
 
+          {/* Height Picker */}
           <CustomFormPicker
             style={styles.input}
-            title={LabelHeight}
             value={this.state.height}
             placeholder={PlaceholderHeight}
             onPress={() => {this.setState({modal: true, mode: ModeHeight}), Keyboard.dismiss()}}
-            error={false}
-            errorMsg={ErrorMsgHeight}
           />
 
+          {/* Weight Picker */}
           <CustomFormPicker
             style={styles.input}
-            title={LabelWeight}
             value={this.state.weight}
             placeholder={PlaceholderWeight}
             onPress={() => {this.setState({modal: true, mode: ModeWeight}), Keyboard.dismiss()}}
-            error={false}
-            errorMsg={ErrorMsgWeight}
           />
 
+          {/* Error Message */}
+          <View style={{height:30}}>
           {error && <Text style={styles.error}>{ErrorMsgRegister}</Text>}
+          </View>
 
-          <Button
+          {/* Register Button*/}
+          <CustomFilledButton
+            style={(this.state.id.length > 0 && this.state.password.length > 0 && this.state.password2.length > 0 && this.state.age &&
+              this.state.gender.length > 0 && this.state.height && this.state.weight) ? styles.registerEnable : styles.registerDisable}
             title={LabelRegister}
-            disabled={!(this.state.id.length > 0 && this.state.password.length > 0 && this.state.age &&
-                        this.state.gender.length > 0 && this.state.height && this.state.weight)}
+            disabled={!(this.state.id.length > 0 && this.state.password.length > 0 && this.state.password2.length > 0 && this.state.age &&
+              this.state.gender.length > 0 && this.state.height && this.state.weight)}
             onPress={this._register}
           />
-        </View>
-        {this.state.modal &&
-          <CustomPicker
-            closeModal={() => this.setState({ modal: false })} 
-            offSet={this.state.offSet}
-            changeValue={this._changeValue} 
-            showModal={this.state.value}
-            mode={this.state.mode}/>
-        }
-      </View>
+
+          {/* Picker Modal */}
+          </View>
+            {this.state.modal &&
+              <CustomPicker
+                closeModal={() => this.setState({ modal: false })} 
+                offSet={this.state.offSet}
+                changeValue={this._changeValue} 
+                showModal={this.state.value}
+                mode={this.state.mode}/>
+            }
+          </View>
     );
   }
 }
 
+// Redux Connect
 export default connect(
   (state) => ({
     isLoggedIn: state.auth.isLoggedIn,
@@ -215,6 +243,6 @@ export default connect(
   }),
   (dispatch) => ({
       RegisterActions: bindActionCreators(registerActions, dispatch),
-      goToMain: () => dispatch({ type: SIGNED}),
+      goToMain: () => dispatch({ type: SIGNED }),
   })
 )(RegisterScreen);

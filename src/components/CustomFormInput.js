@@ -27,21 +27,28 @@ class CustomFormInput extends Component {
   }
 
   render(){
-    const { style, iconStyle, placeholder, type, onChangeText, maxLength, clearButtonMode, secureTextEntry, error, errorMsg } = this.props;
+    const { style, iconStyle, placeholder, isIcon, type, onChangeText, maxLength, clearButtonMode, secureTextEntry, error, errorMsg } = this.props;
     let iconSRC
-    switch(type){
-      case "ID": iconSRC = require("../../assets/loginID.png")
-      break
-      case "PW": iconSRC = require("../../assets/loginPW.png")
-      break
-    }
+
+    if(isIcon){
+      switch(type){
+        case "ID": iconSRC = require("../../assets/loginID.png")
+        break
+        case "PW": iconSRC = require("../../assets/loginPW.png")
+        break
+        default :
+        break
+      }
+    } 
+
     return(
-        <View style={style}>
+        <View>
           <Input
+            containerStyle={style}
             selectionColor={mainColor}
             onFocus={() => this._onFocus()}
             onBlur={ () => this._onBlur() }
-            containerStyle={{borderBottomColor: this.state.focus ? mainColor : placeholderText}}
+            inputContainerStyle={{borderBottomColor: this.state.focus ? mainColor : placeholderText}}
             inputStyle={{color: placeholderText}}
             placeholder={placeholder}
             onChangeText={onChangeText}
@@ -54,6 +61,7 @@ class CustomFormInput extends Component {
             errorMessage={error ? errorMsg : " "}
             onChange={() => this._onChange()}
             rightIcon={
+              isIcon &&
               this.state.changed && 
               <Image
                 style={iconStyle}

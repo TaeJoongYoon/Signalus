@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { CheckBox } from 'react-native-elements'
 import { checkboxSize } from '../constants/dimens'
+import { placeholderText } from '../constants/color';
 
 class CustomCheckBox extends Component {
   constructor(props){
@@ -9,7 +10,7 @@ class CustomCheckBox extends Component {
   }
 
   render(){
-    const { checked, onPress, title } = this.props;
+    const { checked, onPress, onTouch, title, underline } = this.props;
     return(
         <View style={{flexDirection:'row', alignItems:'center'}}>
           <CheckBox
@@ -23,7 +24,15 @@ class CustomCheckBox extends Component {
             checked={checked}
             onPress={onPress}
           />
-          <Text>{title}</Text>
+          <TouchableOpacity
+            onPress={onTouch}>
+            <Text
+              style={underline ? {textDecorationLine: 'underline', fontSize: 16, color: placeholderText} :
+                                  {fontWeight:'bold', fontSize: 16, color: 'black'}}
+            >
+            {title}
+            </Text>
+          </TouchableOpacity>
         </View>
       );
   }
