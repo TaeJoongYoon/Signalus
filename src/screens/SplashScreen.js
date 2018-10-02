@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 // Elements
 import {
-  View, AsyncStorage, Text
+  View, AsyncStorage, Image
 } from 'react-native';
 import styles from '../styles/SplashStyle';
 // Actions
@@ -14,12 +14,19 @@ import {
 
 
 class SplashScreen extends Component{
+  static navigationOptions = {
+    header: null,
+    headerBackTitle: null
+  };
+
+  // Functions
   _login = async (id, password) => {
     const { LoginActions } = this.props;
     
     return await LoginActions.login(id, password);
   }
 
+  // LifeCycle
   componentDidMount(){
     const { goToSignIn } = this.props;
 
@@ -48,12 +55,18 @@ class SplashScreen extends Component{
   render(){
     return(
       <View style={styles.container}>
-        <Text>This is Splash</Text>
+
+        {/* Splash */}
+        <Image
+          style= {styles.image} 
+          source={require('../../assets/splash.jpg')}
+        />
       </View>
     );
   }
 }
 
+// Redux Connect
 export default connect(
   (state) => ({
     isLoggedIn : state.auth.isLoggedIn,

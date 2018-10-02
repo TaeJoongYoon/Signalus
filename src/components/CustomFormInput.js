@@ -1,34 +1,66 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
-import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
+import { View, Image } from 'react-native';
+import { Input } from 'react-native-elements'
 
 import { defaultMaxLength } from '../constants/dimens'
+import { mainColor, placeholderText } from '../constants/color'
 
 class CustomFormInput extends Component {
   constructor(props){
     super(props)
+    this.state= {
+      focus: false,
+      changed: false,
+    }
+  }
+
+  _onFocus = () => {
+    this.setState({focus: true})
+  }
+
+  _onBlur = () => {
+    this.setState({focus: false})
+  }
+
+  _onChange = () => {
+    this.setState({changed: true})
   }
 
   render(){
-    const { style, title, placeholder, onChangeText, maxLength, clearTextOnFocus, secureTextEntry, error, errorMsg } = this.props;
+    const { style, iconStyle, placeholder, type, onChangeText, maxLength, clearButtonMode, secureTextEntry, error, errorMsg } = this.props;
+    let iconSRC
+    switch(type){
+      case "ID": iconSRC = require("../../assets/loginID.png")
+      break
+      case "PW": iconSRC = require("../../assets/loginPW.png")
+      break
+    }
     return(
         <View style={style}>
-          <FormLabel
-            labelStyle={{color:'black',}}
-          >{title}
-          </FormLabel>
-          <FormInput
-            inputStyle={{color:'black',}}
+          <Input
+            selectionColor={mainColor}
+            onFocus={() => this._onFocus()}
+            onBlur={ () => this._onBlur() }
+            containerStyle={{borderBottomColor: this.state.focus ? mainColor : placeholderText}}
+            inputStyle={{color: placeholderText}}
             placeholder={placeholder}
             onChangeText={onChangeText}
             maxLength={maxLength ? maxLength : defaultMaxLength}
-            clearTextOnFocus={clearTextOnFocus}
             secureTextEntry={secureTextEntry}
-            clearButtonMode='always'
+            clearButtonMode={clearButtonMode}
             shake={error}
             autoCorrect={false}
+            errorStyle={{ color: 'red' }}
+            errorMessage={error ? errorMsg : " "}
+            onChange={() => this._onChange()}
+            rightIcon={
+              this.state.changed && 
+              <Image
+                style={iconStyle}
+                source={iconSRC}
+              />
+            }
           />
-          {error && <FormValidationMessage>{errorMsg}</FormValidationMessage>}
         </View>
       );
   }

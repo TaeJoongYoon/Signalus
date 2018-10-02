@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 // Elements
 import {
- View, Text, Button
+ Image, View, Text, Button, TouchableOpacity
 } from 'react-native';
 import CustomFormInput from '../components/CustomFormInput';
 import styles from '../styles/SignInStyle';
@@ -15,8 +15,9 @@ import {
 } from '../reducers/nav/actionTypes'
 // Strings
 import {
-  LabelId, LabelPassword, LabelSignIn, LabelRegister, PlaceholderId, PlaceholderPassword, ErrorMsgId, ErrorMsgPassword, ErrorMsgLogin
+  LabelSignIn, LabelRegister, LabelFind, PlaceholderId, PlaceholderPassword, ErrorMsgId, ErrorMsgPassword, ErrorMsgLogin
 } from '../constants/string';
+import { mainColor } from '../constants/color';
 
 class SignInScreen extends Component{
   static navigationOptions = {
@@ -34,6 +35,7 @@ class SignInScreen extends Component{
     }
   }
   
+  // Functions
   _login = () => {
     const { LoginActions } = this.props;
     this.setState({idError:false, pwError:false})
@@ -49,6 +51,11 @@ class SignInScreen extends Component{
     }
   }
 
+  _find = () => {
+
+  }
+
+  // LifeCycle
   componentWillReceiveProps(nextProps) {
     const { goToMain, isLoggedIn } = nextProps;
 
@@ -62,46 +69,88 @@ class SignInScreen extends Component{
 
     return(
       <View style={styles.container}>
-        <Text style={styles.title}>Signalus</Text>
         
+        {/* Logo */}
+        <Image
+          style= {styles.image} 
+          source={require('../../assets/logo.png')} 
+        />
+
+        {/* Error Message */}
+        <View style={{height:20}}>
+        {error && <Text style={styles.error}>{ErrorMsgLogin}</Text>}
+        </View>
+        
+       {/* ID Form */}
         <CustomFormInput 
           style={styles.input}
-          title={LabelId}
+          iconStyle={styles.icon}
+          type="ID"
           placeholder={PlaceholderId}
           onChangeText={(id) => this.setState({id})}
           maxLength={20}
+          clearButtonMode="never"
           error={this.state.idError}
           errorMsg={ErrorMsgId}
         />
 
+        {/* PW Form */}
         <CustomFormInput
           style={styles.input}
-          title={LabelPassword}
+          iconStyle={styles.icon}
+          type="PW"
           placeholder={PlaceholderPassword}
           onChangeText={(password) => this.setState({password})}
-          clearTextOnFocus={true}
+          maxLength={20}
+          clearButtonMode="always"
           secureTextEntry={true}
           error={this.state.pwError}
           errorMsg={ErrorMsgPassword}
         />
 
-        {error && <Text style={styles.error}>{ErrorMsgLogin}</Text>}
-
-        <Button
-          title={LabelSignIn}
-          disabled={(this.state.id.length==0 && this.state.password.length==0)}
-          onPress={() => this._login()}
-        />
-
-        <Button
-          title={LabelRegister}
-          onPress={goToConsent}
-        />
+        {/* SignIn Button */}
+        <View style={(this.state.id.length==0 && this.state.password.length==0) ? styles.loginDisable : styles.loginEnable}>
+          <TouchableOpacity
+            disabled={(this.state.id.length==0 && this.state.password.length==0)}
+            onPress={() => this._login()}>
+            <Text
+              style={{fontWeight: 'bold', color: 'white', fontSize: 20}}
+              pointerEvents='none'>
+            {LabelSignIn}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        
+        {/* Find Button */}
+        <View style={styles.find}> 
+          <TouchableOpacity 
+            onPress={() => this._find()}>
+            <Text
+              style={{textDecorationLine: 'underline', color: mainColor, fontSize: 15}}
+              pointerEvents='none'>
+            {LabelFind}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        
+        {/* Register Button */}
+        <View style={styles.register}>
+          <TouchableOpacity
+            onPress={goToConsent}>
+            <Text
+              style={{fontWeight: 'bold', color: mainColor, fontSize: 20}}
+              pointerEvents='none'>
+            {LabelRegister}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        
       </View>
     );
   }
 }
 
+// Redux Connect
 export default connect(
   (state) => ({
     loading: state.auth.pending,

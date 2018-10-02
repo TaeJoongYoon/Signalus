@@ -1,19 +1,62 @@
 import {  StyleSheet, } from 'react-native';
 import { WIDTH, HEIGHT } from '../constants/dimens';
+import { backgroundColor, mainColor, disable } from '../constants/color';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
+    backgroundColor: backgroundColor,
   },
-  title: {
-    paddingTop:'30%',
-    paddingBottom: '25%',
-    fontSize: 30,
+  image: {
+    marginTop: '8%',
+    resizeMode: 'center',
+    width: WIDTH * 0.3,
   },
   input: {
-    width: WIDTH * 0.8,
+    alignItems: 'center',
+    width: WIDTH * 0.9,
+    height: HEIGHT * 0.1,
+  },
+  icon: {
+    resizeMode: 'center',
+    width: 20,
+  },
+  loginEnable: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: mainColor,
+    width: WIDTH * 0.85,
+    height: HEIGHT * 0.08,
+    borderRadius:10,
+  },
+  loginDisable: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: disable,
+    width: WIDTH * 0.85,
+    height: HEIGHT * 0.08,
+    borderRadius:10,
+  },
+  find:{
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: HEIGHT * 0.08,
+  },
+  register: {
+    marginTop: HEIGHT * 0.04,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: WIDTH * 0.85,
+    height: HEIGHT * 0.08,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: mainColor
   },
   error: {
     color: 'red',

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { BleManager } from 'react-native-ble-plx';
-import { Buffer } from 'buffer';
+import { base64ToHex, getDecValue } from '../constants/utils';
 import update from 'react-addons-update';
 // Elements
 import {
@@ -13,8 +13,6 @@ import {
   targetDeviceName,
   heartRateMeasurementUUID, bodySensorLocationUUID, batteryLevelUUID, deviceInfoUUID,
  } from '../constants/string';
-
-const base64ToDec = (value) => new Buffer(value, 'base64').toString('hex')
 
 class VitalScreen extends Component{
   constructor(props){
@@ -30,17 +28,19 @@ class VitalScreen extends Component{
   }
 
   componentDidMount(){
-    const subscription = this.manager.onStateChange((state) => {
-      if (state === 'PoweredOn') {
-        this._scan();
-        subscription.remove();
-      }
-    }, true);
+    // const subscription = this.manager.onStateChange((state) => {
+    //   if (state === 'PoweredOn') {
+    //     this._scan();
+    //     subscription.remove();
+    //   }
+    // }, true);
   }
 
   _scan = () => {
     this.manager.startDeviceScan(null,
                                  null, (error, device) => {
+                                   
+      console.log(device.name)
 
       if (error) {
         this.setState({error: true, errorMsg: error.message})
@@ -53,7 +53,6 @@ class VitalScreen extends Component{
       }
     });
   }
-
 
   _connectToDevice = (device) => {
     device
@@ -94,8 +93,7 @@ class VitalScreen extends Component{
     characteristic
       .read()
       .then((c) => {
-        const v = base64ToDec(c.value);
-        const value = parseInt(v, 16)
+        const value = getDecValue(c)
         console.log(`---------------------------------------------------
         Characteristic UUID : ${characteristic.uuid}
         Read Value : ${value}`); // Read Value
@@ -107,8 +105,7 @@ class VitalScreen extends Component{
       characteristic.monitor((error, c) => {
         if(error) this.setState({error: true, errorMsg: error.message})
         if(c){
-          const v = base64ToDec(c.value);
-          const value = parseInt(v, 16)
+          const value = getDecValue(c)
           console.log(`---------------------------------------------------
           Characteristic UUID : ${characteristic.uuid}
           Notify Value : ${value}`);
@@ -139,9 +136,12 @@ class VitalScreen extends Component{
 
   render(){
     return(
+      <View>
       <CustomChart
         data = {this.state.data}
       />
+      {this.state.error && <Text>{this.state.errorMsg}</Text>}
+      </View>
     );
   }
 }

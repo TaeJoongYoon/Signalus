@@ -11,7 +11,6 @@ import { bindActionCreators } from "redux";
 import * as connectActions from '../reducers/bluetooth/actions';
 import { BleManager } from 'react-native-ble-plx';
 import _ from 'lodash';
-import { Buffer } from 'buffer';
 import { CONNECTED } from '../reducers/nav/actionTypes'
 
 class BluetoothScreen extends Component{
@@ -90,7 +89,7 @@ class BluetoothScreen extends Component{
             <CustomDevicesItem
               key={device.id}
               title={device.name}
-              onPress={(device) => this._onConnect(device)}
+              onPress={() => this._onConnect(device)}
             />
           );
         })}
