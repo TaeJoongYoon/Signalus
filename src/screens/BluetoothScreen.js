@@ -1,37 +1,62 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import {
-  View,
-  Text,
-  Button
-} from 'react-native';
-import CustomDevicesItem from '../components/CustomDevicesItem';
-import update from 'react-addons-update';
 import { bindActionCreators } from "redux";
-import * as connectActions from '../reducers/bluetooth/actions';
-import { BleManager } from 'react-native-ble-plx';
+import { connect } from 'react-redux';
+import update from 'react-addons-update';
 import _ from 'lodash';
+import { BleManager } from 'react-native-ble-plx';
+// Elements
+import {
+  View, Text, Button, Switch, Image, TouchableOpacity
+} from 'react-native';
+import styles from '../styles/BluetoothStyle';
+import CustomDevicesItem from '../components/CustomDevicesItem';
+// Actions
+import * as connectActions from '../reducers/bluetooth/actions';
 import { CONNECTED } from '../reducers/nav/actionTypes'
+// Strings
+import {
+  HeaderBluetooth,
+  LabelBluetoothToggleOn, LabelBluetoothToggleOff, LabelBluetoothListTitle, LabelBluetoothNotConnect
+} from '../constants/string';
+// Colors
+import { mainColor, placeholderText } from '../constants/color';
+import { Divider } from 'react-native-elements';
 
 class BluetoothScreen extends Component{
+  static navigationOptions = {
+    title: HeaderBluetooth,
+  };
+
   constructor(props) {
     super(props)
     this.manager = new BleManager()
-    this.targetDeviceName = "Nordic_HRM"
+    this.timeOut
     this.state = {
+      isON: false,
       deviceNames: [],
       deviceList: [],
       error: false,
-      errorMsg: '',
-      connected: false,
-      info: 'Empty',
-    };
+      errorMsg: "",
+    }
   }
 
+  // Functions
+  _toggleBluetooth = (value) => {
+    this.setState({isON: value})
+
+    console.log('Switch is: ' + value)
+    value ? this._scan() : this._stop()
+ }
+
   _scan = () => {
-    this.manager.startDeviceScan(null, null, (error, device) => {
+    this.timeOut = setTimeout(this._stop, 5000);
+    this.manager.startDeviceScan(null,
+                                null, (error, device) => {
+                                  
+      console.log("scan : "+device)
       
-      if(device.name && device.name.startsWith("Nordic")){
+      if(device){
+      //if(device.name && device.name.startsWith("Nordic")){
         if(this.state.deviceNames.indexOf(device.name) == -1){
           this.setState({
             deviceNames: update(
@@ -47,7 +72,7 @@ class BluetoothScreen extends Component{
           })
         }
       }
-    
+
       if (error) {
         this.setState({error: true, errorMsg: error.message})
         return
@@ -55,45 +80,94 @@ class BluetoothScreen extends Component{
     });
   }
 
-  _onConnect = (device) => {
-    const { ConnectActions } = this.props;
-
-      ConnectActions.connect(device);
+  _stop = () => {
+    this.manager.stopDeviceScan()
+    this.setState({isON: false, error: false})
+    clearTimeout(this.timeOut)
+    console.log('scan stop')
   }
 
+  _connect = (device) => {
+    console.log(device)
+  }
+
+  // LifeCycle
   componentDidMount(){
-    const subscription = this.manager.onStateChange((state) => {
-      if (state === 'PoweredOn') {
-        this._scan();
-        subscription.remove();
-      }
-    }, true);
+
   }
 
   componentWillReceiveProps(nextProps) {
     const { goToMain, isConnected } = nextProps;
     console.log(nextProps)
 
-    if(isConnected){
-      this.manager.stopDeviceScan()
-      goToMain();   // Go to MainScreen
-    } 
   }
 
   render(){
     const { goToMain } = this.props;
     return(
-      <View>
-        {_.map(this.state.deviceList, device => {
-          return (
-            <CustomDevicesItem
-              key={device.id}
-              title={device.name}
-              onPress={() => this._onConnect(device)}
+      <View style={styles.container}>
+        {console.log(this.props)}
+
+        {/* Header View */}
+        <View style={styles.headerBox}>
+          <Text style={this.state.isON ? styles.textToggleOn : styles.textToggleOff}>
+            {this.state.isON ? LabelBluetoothToggleOn : LabelBluetoothToggleOff}
+          </Text>
+          <View style={styles.toggleView}>
+            {this.state.isON ?
+              <Image
+                style={{width: 26, height: 26, margin: 10}}
+                source={require('../../assets/bluetoothSync.png')}
+              /> : null
+            }
+            <Switch
+              onTintColor={mainColor}
+              onValueChange = {this._toggleBluetooth}
+              value = {this.state.isON}
             />
-          );
-        })}
-        {this.state.error && <Text>{this.state.errorMsg}</Text>}
+          </View>
+        </View>
+
+        {/* ListTitle */}
+        <Text style={!this.state.error ? styles.listTitle : styles.listTitleError}>
+        {this.state.error ? this.state.errorMsg : LabelBluetoothListTitle }
+        </Text>
+
+        {/* Device List */}
+        {this.state.isON ?
+        <View style={styles.deviceContainer}>
+          <View style={styles.deviceList}>
+            {_.map(this.state.deviceList, device => {
+              return (
+                <CustomDevicesItem
+                  key={device.id}
+                  style={styles.device}
+                  text={styles.deviceTitle}
+                  divider={styles.divider}
+                  title={device.name}
+                  onPress={() => this._connect(device)}
+                />
+              );
+            })}
+          </View>
+        </View> : null
+        }
+
+        {/* Next */}
+        {!this.state.isON ?
+          <View style={styles.next}>
+            <TouchableOpacity 
+              onPress={goToMain}>
+              <Text
+                style={{color: placeholderText, fontSize: 20, fontWeight: 'bold'}}
+                pointerEvents='none'>
+              {LabelBluetoothNotConnect}
+              </Text>
+              <Divider style={{backgroundColor: mainColor, height: 2}}/>
+            </TouchableOpacity>
+          </View> : null
+        }
+
       </View>
     );
   }

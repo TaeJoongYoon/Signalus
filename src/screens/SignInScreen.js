@@ -17,8 +17,9 @@ import {
 } from '../reducers/nav/actionTypes'
 // Strings
 import {
-  LabelSignIn, LabelRegister, LabelFind, PlaceholderId, PlaceholderPassword, ErrorMsgId, ErrorMsgPassword, ErrorMsgLogin
+  LabelSignIn, LabelRegister, LabelFind, PlaceholderId, PlaceholderPassword, ErrorMsgId, ErrorMsgPassword, ErrorMsgLogin, HeaderBluetooth
 } from '../constants/string';
+// Colors
 import { mainColor } from '../constants/color';
 
 class SignInScreen extends Component{
@@ -59,10 +60,11 @@ class SignInScreen extends Component{
 
   // LifeCycle
   componentWillReceiveProps(nextProps) {
-    const { goToMain, isLoggedIn } = nextProps;
+    const { goToMain, goToBluetooth, isLoggedIn } = nextProps;
 
     if(isLoggedIn){
-      goToMain();   // Go to MainScreen
+      goToBluetooth();
+      //goToMain();   // Go to MainScreen
     } 
   }
 

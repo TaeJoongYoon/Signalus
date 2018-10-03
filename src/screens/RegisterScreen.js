@@ -219,8 +219,8 @@ class RegisterScreen extends Component{
             onPress={this._register}
           />
 
-          {/* Picker Modal */}
-          </View>
+        </View>
+            {/* Picker Modal */}
             {this.state.modal &&
               <CustomPicker
                 closeModal={() => this.setState({ modal: false })} 
@@ -229,7 +229,7 @@ class RegisterScreen extends Component{
                 showModal={this.state.value}
                 mode={this.state.mode}/>
             }
-          </View>
+      </View>
     );
   }
 }

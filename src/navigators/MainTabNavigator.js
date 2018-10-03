@@ -15,7 +15,7 @@ const MainScreen = createBottomTabNavigator({
   tabBarOptions:{
     activeTintColor: activeTintColor,
     inactiveTintColor: inactiveTintColor,
-    //showLabel: false,
+    showLabel: false,
     style: {
       backgroundColor: backgroundColor,
     },

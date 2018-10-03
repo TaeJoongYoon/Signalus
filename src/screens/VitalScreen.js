@@ -1,20 +1,32 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { BleManager } from 'react-native-ble-plx';
-import { base64ToHex, getDecValue } from '../constants/utils';
+import { getDecValue } from '../constants/utils';
 import update from 'react-addons-update';
 // Elements
 import {
-  View, Text
+  View, Text, Image
 } from 'react-native';
+import styles from '../styles/VitalStyle';
 import CustomChart from '../components/CustomChart';
 // String
 import { 
+  HeaderVital,
   targetDeviceName,
   heartRateMeasurementUUID, bodySensorLocationUUID, batteryLevelUUID, deviceInfoUUID,
  } from '../constants/string';
 
 class VitalScreen extends Component{
+  static navigationOptions = {
+    tabBarIcon: ({ focused }) => {
+      let src = focused ? require('../../assets/vitalON.png') : require('../../assets/vitalOFF.png')
+      return <Image
+              style={{ width: 20, height: 20 }}
+              source={src}
+            />;
+    },
+  };
+
   constructor(props){
     super(props)
     this.manager = new BleManager()
@@ -136,7 +148,7 @@ class VitalScreen extends Component{
 
   render(){
     return(
-      <View>
+      <View style={styles.container}>
       <CustomChart
         data = {this.state.data}
       />

@@ -49,7 +49,9 @@ class SplashScreen extends Component{
   componentWillReceiveProps(nextProps) {
     const { isLoggedIn, goToMain, goToSignIn, goToBluetooth } = nextProps;
 
-    isLoggedIn ? goToMain() : goToSignIn()
+    isLoggedIn ? goToBluetooth() : goToSignIn()
+
+    //isLoggedIn ? goToMain() : goToSignIn()
   }
 
   render(){

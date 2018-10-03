@@ -1,19 +1,39 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+// Elements
 import {
-  View,
-  Text,
-  Button
+  View, Text, Button, Image
 } from 'react-native';
+import styles from '../styles/SymptomStyle';
+// Actions
 import { 
   ON_LOG,
  } from '../reducers/nav/actionTypes'
+ // Strings
+import { 
+  HeaderSymptom,
+ } from '../constants/string';
 
 class SymptomScreen extends Component{
+  static navigationOptions = {
+    tabBarIcon: ({ focused }) => {
+      let src = focused ? require('../../assets/symptomON.png') : require('../../assets/symptomOFF.png')
+      return <Image
+              style={{width: 20, height: 24}}
+              source={src}
+            />;
+    },
+  };
+
+  constructor(props){
+    super(props)
+  }
+
+
   render(){
     const { log } = this.props;
     return(
-      <View>
+      <View style={styles.container}>
         <Text>This is Symptom</Text>
         <Button
           title='Log'
