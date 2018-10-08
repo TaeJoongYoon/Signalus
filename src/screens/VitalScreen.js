@@ -5,7 +5,7 @@ import { getDecValue } from '../constants/utils';
 import update from 'react-addons-update';
 // Elements
 import {
-  View, Text, Image
+  View, Text, Image, Button
 } from 'react-native';
 import styles from '../styles/VitalStyle';
 import CustomChart from '../components/CustomChart';
@@ -18,13 +18,14 @@ import {
 
 class VitalScreen extends Component{
   static navigationOptions = {
-    tabBarIcon: ({ focused }) => {
-      let src = focused ? require('../../assets/vitalON.png') : require('../../assets/vitalOFF.png')
-      return <Image
-              style={{ width: 20, height: 20 }}
-              source={src}
-            />;
-    },
+    title: 'aa',
+    headerRight: (
+      <Button
+        onPress={() => alert('This is a button!')}
+        title="Info"
+        color="#fff"
+      />
+    ),
   };
 
   constructor(props){

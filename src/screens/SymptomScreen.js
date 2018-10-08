@@ -15,16 +15,6 @@ import {
  } from '../constants/string';
 
 class SymptomScreen extends Component{
-  static navigationOptions = {
-    tabBarIcon: ({ focused }) => {
-      let src = focused ? require('../../assets/symptomON.png') : require('../../assets/symptomOFF.png')
-      return <Image
-              style={{width: 20, height: 24}}
-              source={src}
-            />;
-    },
-  };
-
   constructor(props){
     super(props)
   }

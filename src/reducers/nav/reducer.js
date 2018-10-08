@@ -100,6 +100,7 @@ export default nav = (state = initialNavState, action) => {
       nextState = router.getStateForAction(
         StackActions.reset({
           index: 0,
+          key: null,
           actions: [NavigationActions.navigate({ routeName: 'SignIn' })]
         }),
         state
@@ -109,6 +110,7 @@ export default nav = (state = initialNavState, action) => {
       nextState = router.getStateForAction(
         StackActions.reset({
           index: 0,
+          key: null,
           actions: [NavigationActions.navigate({ routeName: 'SignIn' })]
         }),
         state

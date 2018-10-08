@@ -23,13 +23,11 @@ const RootNavigator = createStackNavigator({
   Consent: { screen: ConsentScreen},
   Register: { screen: RegisterScreen },
   Bluetooth: { screen: BluetoothScreen },
-  Main: { screen: MainScreen},
-  Calendar: { screen: CalendarScreen},
+  Main: { screen: MainScreen },
   History: { screen: HistoryScreen },
-  SymptomLog: { screen: SymptomLogScreen},
-  SymptomDetail: { screen: SymptomDetailScreen},
 },{
   initialRouteName: 'Splash',
+  headerMode: 'screen',
   navigationOptions: {
     title: 'Signalus',
     headerStyle: {
