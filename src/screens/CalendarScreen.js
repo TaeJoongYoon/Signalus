@@ -1,29 +1,39 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+// Elements
 import {
-  View,
-  Text,
-  Button
+  View, Text, Button
 } from 'react-native';
+import styles from '../styles/CalendarStyle';
+// Actions
 import { HISTORY } from '../reducers/nav/actionTypes'
+// Strings
+import { HeaderCalendar } from '../constants/string';
 
 class CalendarScreen extends Component{
+  static navigationOptions = {
+    title: HeaderCalendar,
+    headerBackTitle: null,
+  };
+
+  // Functions
+
+  // LifeCycle
   render(){
     const { history } = this.props;
     return(
-      <View>
-        <Text>This is Calendar</Text>  
-        <Button
-          title='Go to history'
-          onPress={history}
-        />
+      <View style={styles.container}>
+        <Text>This is Calendar</Text> 
       </View>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  history: () => dispatch({ type: HISTORY}),
-});
+export default connect(
+  (state) => ({
 
-export default connect(null, mapDispatchToProps)(CalendarScreen);
+  }),
+  (dispatch) => ({
+    history: () => dispatch({ type: HISTORY}),
+  })
+)(CalendarScreen);

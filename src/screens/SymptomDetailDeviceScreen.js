@@ -2,32 +2,30 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // Elements
 import {
-  View, Text, Button
+  View, Text
 } from 'react-native';
-import styles from '../styles/SymptomLogStyle';
+import styles from '../styles/SymptomDetailDeviceStyle';
 // Actions
-import { 
-  ON_DETAIL,
- } from '../reducers/nav/actionTypes'
+
 // Strings
-import { HeaderSymptomLog } from '../constants/string';
+import { HeaderSymptomDetailFromDevice, } from '../constants/string';
 
-class SymptomLogScreen extends Component{
+class SymptomDetailDeviceScreen extends Component{
   static navigationOptions = {
-    title: HeaderSymptomLog,
+    title: HeaderSymptomDetailFromDevice,
   };
-
+  
   constructor(props){
     super(props)
   }
-  
+
   // Functions
 
   // LifeCycle
   render(){
     return(
       <View style={styles.container}>
-        <Text>This is SymptomLog</Text>
+        <Text>This is Detail</Text>  
       </View>
     );
   }
@@ -40,4 +38,4 @@ export default connect(
   (dispatch) => ({
     
   })
-)(SymptomLogScreen);
+)(SymptomDetailDeviceScreen);

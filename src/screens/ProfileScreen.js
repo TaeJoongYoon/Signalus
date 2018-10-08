@@ -9,29 +9,24 @@ import styles from '../styles/ProfileStyle';
 // Actions
 import * as withdrawActions from '../reducers/auth/actions';
 import {
-  SIGNOUT, RESIGNED
+  SIGNOUT, RESIGNED, ON_SETTING
 } from '../reducers/nav/actionTypes'
 // Strings
 import { 
-  HeaderSymptom, HeaderProfile,
+  HeaderProfile,
  } from '../constants/string';
 
 class ProfileScreen extends Component{
   static navigationOptions = {
-    tabBarIcon: ({ focused }) => {
-      let src = focused ? require('../../assets/profileON.png') : require('../../assets/profileOFF.png')
-      return <Image
-              style={{width: 20, height: 24}}
-              source={src}
-            />;
-    },
+    title: HeaderProfile,
+    headerBackTitle: null,
   };
 
   constructor(props){
     super(props)
   }
 
-
+  // Functions
   _logout = () => {
     const { logout } = this.props;
 
@@ -56,6 +51,7 @@ class ProfileScreen extends Component{
     })
   }
 
+  // LifeCycle
   componentWillReceiveProps(nextProps) {
     const { logout, isLoggedIn } = nextProps;
     if(!isLoggedIn){
@@ -64,6 +60,7 @@ class ProfileScreen extends Component{
   }
 
   render(){
+    const { setting } = this.props;
     return(
       <View style={styles.container}>
         <Text>This is Profile</Text>
@@ -72,8 +69,12 @@ class ProfileScreen extends Component{
           onPress={this._logout}
         />
         <Button
-          title={`Resign`}
+          title={`Withdraw`}
           onPress={this._withdraw}
+        />
+        <Button
+          title={`Setting`}
+          onPress={setting}
         />
       </View>
     );
@@ -88,7 +89,7 @@ export default connect(
   }),
   (dispatch) => ({
       WithdrawActions: bindActionCreators(withdrawActions, dispatch),
+      setting: () => dispatch({ type: ON_SETTING }),
       logout: () => dispatch({ type: SIGNOUT}),
-      resign: () => dispatch({ type: RESIGNED}),
   })
 )(ProfileScreen);

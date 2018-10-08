@@ -2,9 +2,9 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import { RootNavigator } from '../../navigators/AppNavigator';
 
 import {
-  NOT_SIGNED, ON_CONSENT, ON_REGISTER, SIGNED, SIGNOUT, RESIGNED,
+  NOT_SIGNED, ON_CONSENT, ON_REGISTER, SIGNED, SIGNOUT,
   CONNECTED, NOT_CONNECTED,
-  ON_CALENDAR, ON_HISTORY, ON_LOG, LOGGED, ON_DETAIL
+  ON_CALENDAR, ON_LOG, LOGGED, ON_DETAIL_DEVICE, ON_DETAIL_USER, ON_SETTING
 } from './actionTypes';
 
 // Start with two routes: The Main screen, with the Login screen on top.
@@ -71,12 +71,6 @@ export default nav = (state = initialNavState, action) => {
         state
       );
       break;
-    case ON_HISTORY:
-      nextState = router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'History' }),
-        state
-      );
-      break;
     case ON_LOG:
       nextState = router.getStateForAction(
         NavigationActions.navigate({ routeName: 'SymptomLog'}),
@@ -89,24 +83,26 @@ export default nav = (state = initialNavState, action) => {
         state
       );
       break;
-    case ON_DETAIL:
+    case ON_DETAIL_DEVICE:
       nextState = router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'SymptomDetail'}),
+        NavigationActions.navigate({ routeName: 'SymptomDetailDevice'}),
+        state
+      );
+      break;
+    case ON_DETAIL_USER:
+      nextState = router.getStateForAction(
+        NavigationActions.navigate({ routeName: 'SymptomDetailUser'}),
+        state
+      );
+      break;
+    case ON_SETTING:
+      nextState = router.getStateForAction(
+        NavigationActions.navigate({ routeName: 'Setting'}),
         state
       );
       break;
 
     case SIGNOUT:
-      nextState = router.getStateForAction(
-        StackActions.reset({
-          index: 0,
-          key: null,
-          actions: [NavigationActions.navigate({ routeName: 'SignIn' })]
-        }),
-        state
-      );
-      break;
-    case RESIGNED:
       nextState = router.getStateForAction(
         StackActions.reset({
           index: 0,

@@ -6,14 +6,6 @@ import ConsentScreen from '../screens/ConsentScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import BluetoothScreen from '../screens/BluetoothScreen'; // Bluetooth
 import MainScreen from './MainTabNavigator';
-// Main-Vital
-import CalendarScreen from '../screens/CalendarScreen';
-import HistoryScreen from '../screens/HistoryScreen';
-// Main-Symptom
-import SymptomLogScreen from '../screens/SymptomLogScreen';
-import SymptomDetailScreen from '../screens/SymptomDetailScreen';
-// Main-Profile
-
 
 import { headerTintColor, mainColor } from '../constants/color';
 
@@ -24,7 +16,6 @@ const RootNavigator = createStackNavigator({
   Register: { screen: RegisterScreen },
   Bluetooth: { screen: BluetoothScreen },
   Main: { screen: MainScreen },
-  History: { screen: HistoryScreen },
 },{
   initialRouteName: 'Splash',
   headerMode: 'screen',

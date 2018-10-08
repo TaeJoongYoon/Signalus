@@ -6,8 +6,10 @@ import VitalScreen from '../screens/VitalScreen'; // Main-Vital
 import CalendarScreen from '../screens/CalendarScreen'; // Vital-Calendar
 import SymptomScreen from '../screens/SymptomScreen'; // Main-Symptom
 import SymptomLogScreen from '../screens/SymptomLogScreen'; // Symptom-Log
-import SymptomDetailScreen from '../screens/SymptomDetailScreen'; //Symptom-Detail
+import SymptomDetailDeviceScreen from '../screens/SymptomDetailDeviceScreen'; //Symptom-DetailFromDevice
+import SymptomDetailUserScreen from '../screens/SymptomDetailUserScreen'; //Symptom-DetailFromUser
 import ProfileScreen from '../screens/ProfileScreen'; // Main-Profile
+import SettingScreen from '../screens/SettingScreen'; // Profile-Setting
 
 import { activeTintColor, inactiveTintColor, backgroundColor, mainColor, headerTintColor } from '../constants/color';
 
@@ -28,10 +30,22 @@ const VitalStack = createStackNavigator({
   },
 });
 
+VitalStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
+
 const SymptomStack = createStackNavigator({
   Symptom: SymptomScreen,
   SymptomLog: SymptomLogScreen,
-  SymptomDetail: SymptomDetailScreen,
+  SymptomDetailDevice: SymptomDetailDeviceScreen,
+  SymptomDetailUser: SymptomDetailUserScreen,
 },{
   navigationOptions: {
     title: 'Signalus',
@@ -46,8 +60,20 @@ const SymptomStack = createStackNavigator({
   },
 });
 
+SymptomStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
+
 const ProfileStack = createStackNavigator({
   Profile: ProfileScreen,
+  Setting: SettingScreen,
 },{
   navigationOptions: {
     title: 'Signalus',

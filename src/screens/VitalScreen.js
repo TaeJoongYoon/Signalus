@@ -5,10 +5,12 @@ import { getDecValue } from '../constants/utils';
 import update from 'react-addons-update';
 // Elements
 import {
-  View, Text, Image, Button
+  View, Text, Image, TouchableOpacity
 } from 'react-native';
 import styles from '../styles/VitalStyle';
 import CustomChart from '../components/CustomChart';
+// Actions
+import { ON_CALENDAR } from '../reducers/nav/actionTypes';
 // String
 import { 
   HeaderVital,
@@ -17,16 +19,19 @@ import {
  } from '../constants/string';
 
 class VitalScreen extends Component{
-  static navigationOptions = {
-    title: 'aa',
+  static navigationOptions = ({ navigation }) => {
+    return{
+    title: HeaderVital,
+    headerBackTitle: null,
     headerRight: (
-      <Button
-        onPress={() => alert('This is a button!')}
-        title="Info"
-        color="#fff"
-      />
+      <TouchableOpacity onPress={navigation.getParam('clickCalendar')}>
+        <Image
+          style={{resizeMode:'center', width:30, margin:20}}
+          source={require('../../assets/calendar.png')}
+        />
+      </TouchableOpacity>
     ),
-  };
+  }};
 
   constructor(props){
     super(props)
@@ -40,14 +45,10 @@ class VitalScreen extends Component{
     };
   }
 
-  componentDidMount(){
-    // const subscription = this.manager.onStateChange((state) => {
-    //   if (state === 'PoweredOn') {
-    //     this._scan();
-    //     subscription.remove();
-    //   }
-    // }, true);
-  }
+  // Functions
+  _increaseCount = () => {
+    this.props.goToCalendar();
+  };
 
   _scan = () => {
     this.manager.startDeviceScan(null,
@@ -147,6 +148,17 @@ class VitalScreen extends Component{
     }
   }
 
+  // LifeCyle
+  componentDidMount(){
+    this.props.navigation.setParams({ clickCalendar: this._increaseCount });
+    // const subscription = this.manager.onStateChange((state) => {
+    //   if (state === 'PoweredOn') {
+    //     this._scan();
+    //     subscription.remove();
+    //   }
+    // }, true);
+  }
+
   render(){
     return(
       <View style={styles.container}>
@@ -165,6 +177,6 @@ export default connect(
     device : state.bluetooth.device,
   }),
   (dispatch) => ({
-
+    goToCalendar: () => dispatch({ type: ON_CALENDAR}),
   })
 )(VitalScreen);

@@ -2,19 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // Elements
 import {
-  View, Text, Button
+  View, Text
 } from 'react-native';
-import styles from '../styles/SymptomLogStyle';
+import styles from '../styles/SettingStyle';
 // Actions
-import { 
-  ON_DETAIL,
- } from '../reducers/nav/actionTypes'
-// Strings
-import { HeaderSymptomLog } from '../constants/string';
 
-class SymptomLogScreen extends Component{
+// Strings
+import { HeaderSetting } from '../constants/string';
+
+class Settingscreen extends Component{
   static navigationOptions = {
-    title: HeaderSymptomLog,
+    title: HeaderSetting,
   };
 
   constructor(props){
@@ -27,7 +25,7 @@ class SymptomLogScreen extends Component{
   render(){
     return(
       <View style={styles.container}>
-        <Text>This is SymptomLog</Text>
+        <Text>This is Setting</Text>  
       </View>
     );
   }
@@ -40,4 +38,4 @@ export default connect(
   (dispatch) => ({
     
   })
-)(SymptomLogScreen);
+)(Settingscreen);
