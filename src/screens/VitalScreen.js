@@ -9,12 +9,13 @@ import {
 import styles from '../styles/VitalStyle';
 import CustomChart from '../components/CustomChart';
 // Actions
-import { ON_CALENDAR } from '../reducers/nav/actionTypes';
+import { ON_CALENDAR, NOT_CONNECTED } from '../reducers/nav/actionTypes';
 // String
 import { 
   HeaderVital,
   heartRateMeasurementUUID, bodySensorLocationUUID, batteryLevelUUID, deviceInfoUUID,
  } from '../constants/string';
+import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';
 
 class VitalScreen extends Component{
   static navigationOptions = ({ navigation }) => {
@@ -24,8 +25,9 @@ class VitalScreen extends Component{
     headerRight: (
       <TouchableOpacity onPress={navigation.getParam('clickCalendar')}>
         <Image
-          style={{resizeMode:'center', width:30, margin:20}}
+          style={{width:30, margin:20}}
           source={require('../../assets/calendar.png')}
+          resizeMode='contain'
         />
       </TouchableOpacity>
     ),
@@ -47,6 +49,8 @@ class VitalScreen extends Component{
   };
 
   _connectToDevice = (device) => {
+    const { disconnect, goToBluetooth } = this.props;
+
     device
       .connect()
       .then((device) => {
@@ -66,6 +70,11 @@ class VitalScreen extends Component{
           });
         }
       });
+
+    this._subscription = device.onDisconnected((error, device) => {
+      disconnect();
+      goToBluetooth();
+    })
   }
 
   _readAndNotify = (service) => {
@@ -94,7 +103,7 @@ class VitalScreen extends Component{
 
   _notifyCharacteristc = (characteristic) => {
     if(characteristic.uuid == heartRateMeasurementUUID){
-      characteristic.monitor((error, c) => {
+      this._heartRateSubcription = characteristic.monitor((error, c) => {
         if(error) this.setState({error: true, errorMsg: error.message})
         if(c){
           const value = getDecValue(c)
@@ -113,13 +122,13 @@ class VitalScreen extends Component{
               )});
           }
           else{
-          this.setState({
-            data: update(
-                      this.state.data, 
-                      {
-                          $push: [value]
-                      }
-            )});
+            this.setState({
+              data: update(
+                        this.state.data, 
+                        {
+                            $push: [value]
+                        }
+              )});
           }
         }
       });
@@ -128,10 +137,10 @@ class VitalScreen extends Component{
 
   // LifeCyle
   componentDidMount(){
-    const { navigation, device } = this.props;
+    const { navigation, device, isConnected } = this.props;
     
     navigation.setParams({ clickCalendar: this._goToCalendar });
-    this._connectToDevice(device);
+    if(isConnected) this._connectToDevice(device);
   }
 
   render(){
@@ -146,14 +155,26 @@ class VitalScreen extends Component{
       </View>
     );
   }
+
+  componentWillUnmount(){
+    const { device } = this.props;
+
+    device.cancelConnection();
+    console.log(device.isConnected)
+    this._subscription.remove();
+    this._heartRateSubcription.remove();
+  }
 }
 
 
 export default connect(
   (state) => ({
     device : state.bluetooth.device,
+    isConnected: state.bluetooth.isConnected,
   }),
   (dispatch) => ({
     goToCalendar: () => dispatch({ type: ON_CALENDAR}),
+    disconnect: () => dispatch({ type: DISCONNECT_SUCCESS }),
+    goToBluetooth: () => dispatch({ type: NOT_CONNECTED})
   })
 )(VitalScreen);

@@ -58,8 +58,6 @@ export const withdraw = (id, token) => dispatch => {
   }) 
 }
 
-
-
 const saveData = (id, password, response) => {
   AsyncStorage.multiSet([
     ["id", id],

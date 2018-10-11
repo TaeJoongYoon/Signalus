@@ -15,6 +15,7 @@ import {
 import { 
   HeaderProfile,
  } from '../constants/string';
+import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';
 
 class ProfileScreen extends Component{
   static navigationOptions = {
@@ -33,21 +34,26 @@ class ProfileScreen extends Component{
 
   // Functions
   _logout = () => {
-    const { device, logout } = this.props;
+    const { device, isConnected, disconnect, logout } = this.props;
+    
+    if(isConnected){
+      device.cancelConnection()
+      disconnect();
+    }
 
-    device.cancelConnection()
     AsyncStorage.multiRemove(['id', 'pw', 'token', 'device']).then(() => {    // Clear LocalStorage
       logout();
     })
   }
 
   _withdraw = () => {
-    const { device, WithdrawActions } = this.props;
+    const { device, isConnected, disconnect, WithdrawActions } = this.props;
 
-    let id;
-    let token;
-
-    device.cancelConnection()
+    if(isConnected){
+      device.cancelConnection()
+      disconnect();
+    }
+    
     AsyncStorage.multiRemove(['id', 'pw', 'token', 'device']).then(() => {    // Clear LocalStorage
       try{
         WithdrawActions.withdraw(this.state.id, this.state.token);    // Withdraw the Account
@@ -67,7 +73,6 @@ class ProfileScreen extends Component{
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
     const { logout, isLoggedIn } = nextProps;
     if(!isLoggedIn){
       logout();
@@ -99,6 +104,7 @@ class ProfileScreen extends Component{
 export default connect(
   (state) => ({
     device: state.bluetooth.device,
+    isConnected: state.bluetooth.isConnected,
     loading: state.auth.pending,
     isLoggedIn : state.auth.isLoggedIn,
     error: state.auth.error
@@ -107,5 +113,6 @@ export default connect(
       WithdrawActions: bindActionCreators(withdrawActions, dispatch),
       setting: () => dispatch({ type: ON_SETTING }),
       logout: () => dispatch({ type: SIGNOUT}),
+      disconnect: () => dispatch({ type: DISCONNECT_SUCCESS })
   })
 )(ProfileScreen);

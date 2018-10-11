@@ -11,9 +11,7 @@ const styles = StyleSheet.create({
   },
   image: {
     marginTop: '8%',
-    resizeMode: 'center',
     width: WIDTH * 0.3,
-    height: HEIGHT * 0.3,
   },
   input: {
     alignItems: 'center',
@@ -21,7 +19,6 @@ const styles = StyleSheet.create({
     height: HEIGHT * 0.1,
   },
   icon: {
-    resizeMode: 'center',
     width: 20,
   },
   loginEnable: {

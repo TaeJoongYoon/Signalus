@@ -4,6 +4,8 @@ import { Defs, LinearGradient, Stop } from 'react-native-svg'
 import { LineChart } from 'react-native-svg-charts'
 import * as shape from 'd3-shape'
 
+import { mainColor, highlightColor } from '../constants/color'
+
 class CustomChart extends React.PureComponent {
   constructor(props){
     super(props)
@@ -23,7 +25,7 @@ class CustomChart extends React.PureComponent {
 
     return (
       <View style={viewStyle}>
-        <View style={{ flex: 1, marginLeft: 10 }}>
+        <View style={{ flex: 1 }}>
           <LineChart
             style={lineStyle}
             data={ data }
@@ -37,7 +39,7 @@ class CustomChart extends React.PureComponent {
             <Gradient/>
           </LineChart>
         </View>
-        </View>
+      </View>
     )
   }
 }

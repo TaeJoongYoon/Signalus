@@ -78,6 +78,7 @@ class SignInScreen extends Component{
         <Image
           style= {styles.image} 
           source={require('../../assets/logo.png')} 
+          resizeMode='contain'
         />
 
         {/* Error Message */}

@@ -66,6 +66,7 @@ class CustomFormInput extends Component {
               <Image
                 style={iconStyle}
                 source={iconSRC}
+                resizeMode='contain'
               />
             }
           />

@@ -1,6 +1,7 @@
 import { AsyncStorage } from 'react-native';
 import { 
   CONNECT_PENDING, CONNECT_SUCCESS, CONNECT_FAILURE,
+  DISCONNECT_PENDING, DISCONNECT_SUCCESS, DISCONNECT_FAILURE,
 } from './actionTypes';
 
 export const connect = (device) => dispatch => {
