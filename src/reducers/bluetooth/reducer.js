@@ -1,5 +1,5 @@
 import { 
-  CONNECT_PENDING, CONNECT_SUCCESS, CONNECT_FAILURE
+  CONNECT_PENDING, CONNECT_SUCCESS, CONNECT_FAILURE,
 } from './actionTypes';
 
 const initialState = {
@@ -26,7 +26,7 @@ export default bluetooth = (state=initialState, action) => {
         isConnected: true,
         device: action.payload
       };
-
+      
     default:
       return state;
   }

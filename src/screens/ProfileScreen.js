@@ -24,35 +24,50 @@ class ProfileScreen extends Component{
 
   constructor(props){
     super(props)
+    this.state= {
+      id:'',
+      password:'',
+      token:'',
+    }
   }
 
   // Functions
   _logout = () => {
-    const { logout } = this.props;
+    const { device, logout } = this.props;
 
-    AsyncStorage.multiRemove(['id','pw','token']).then(() => {    // Clear LocalStorage
+    device.cancelConnection()
+    AsyncStorage.multiRemove(['id', 'pw', 'token', 'device']).then(() => {    // Clear LocalStorage
       logout();
     })
   }
 
   _withdraw = () => {
-    const { WithdrawActions } = this.props;
+    const { device, WithdrawActions } = this.props;
 
     let id;
     let token;
 
-    AsyncStorage.multiGet(['id', 'token']).then((value) => {    // Get Data From LocalStorage
-      id = value[0][1];
-      token = value[1][1];
-    }).then(() => {
+    device.cancelConnection()
+    AsyncStorage.multiRemove(['id', 'pw', 'token', 'device']).then(() => {    // Clear LocalStorage
       try{
-        WithdrawActions.withdraw(id, token);    // Withdraw the Account
+        WithdrawActions.withdraw(this.state.id, this.state.token);    // Withdraw the Account
       }catch(e){}
     })
   }
 
   // LifeCycle
+  componentDidMount(){
+    AsyncStorage.multiGet(['id', 'pw', 'token']).then((value) => {    // Get Data From LocalStorage
+      id = value[0][1];
+      password = value[1][1];
+      token = value[2][1];
+
+      this.setState({id: id, password: password, token: token})
+    })
+  }
+
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps)
     const { logout, isLoggedIn } = nextProps;
     if(!isLoggedIn){
       logout();
@@ -83,6 +98,7 @@ class ProfileScreen extends Component{
 
 export default connect(
   (state) => ({
+    device: state.bluetooth.device,
     loading: state.auth.pending,
     isLoggedIn : state.auth.isLoggedIn,
     error: state.auth.error

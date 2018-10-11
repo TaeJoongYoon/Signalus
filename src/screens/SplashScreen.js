@@ -33,9 +33,10 @@ class SplashScreen extends Component{
     let id;
     let password;
 
-    AsyncStorage.multiGet(['id', 'pw']).then((value) => {   // Check LocalStorage
+    AsyncStorage.multiGet(['id', 'pw', 'device']).then((value) => {   // Check LocalStorage
       id =  value[0][1];
       password =  value[1][1];
+      device = value[2][1];
 
       if(id != null && password != null) {    // Login
         this._login(id,password)

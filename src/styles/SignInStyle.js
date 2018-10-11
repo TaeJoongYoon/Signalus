@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     marginTop: '8%',
     resizeMode: 'center',
     width: WIDTH * 0.3,
+    height: HEIGHT * 0.3,
   },
   input: {
     alignItems: 'center',

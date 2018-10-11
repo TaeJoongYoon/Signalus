@@ -52,7 +52,6 @@ export const withdraw = (id, token) => dispatch => {
     (response) => {   // Success
     console.log(response); // Don't forget remove it
     dispatch(success(response));
-    clearData();
   }).catch((error) => {// Failure
     console.log(error) // Don't forget remove it
     dispatch(failure(error))
@@ -67,8 +66,4 @@ const saveData = (id, password, response) => {
     ["pw", password],
     ["token", response.data.token],
   ])
-}
-
-const clearData = () => {
-  AsyncStorage.multiRemove(['id','pw','token']);
 }

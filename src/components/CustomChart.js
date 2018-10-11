@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 import { Defs, LinearGradient, Stop } from 'react-native-svg'
-import { LineChart, Grid, YAxis } from 'react-native-svg-charts'
+import { LineChart } from 'react-native-svg-charts'
 import * as shape from 'd3-shape'
 
 class CustomChart extends React.PureComponent {
@@ -10,10 +10,7 @@ class CustomChart extends React.PureComponent {
   }
 
   render() {
-    const { data } = this.props;
-    const axesSvg = { fontSize: 10, fill: 'grey' };
-    const verticalContentInset = { top: 10, bottom: 10 }
-    const xAxisHeight = 30
+    const { data, viewStyle, lineStyle } = this.props;
 
     const Gradient = () => (
         <Defs key={'gradient'}>
@@ -25,10 +22,10 @@ class CustomChart extends React.PureComponent {
     )
 
     return (
-      <View style={{ height: 200, padding: 20, flexDirection: 'row' }}>
+      <View style={viewStyle}>
         <View style={{ flex: 1, marginLeft: 10 }}>
           <LineChart
-            style={ { height: 200 } }
+            style={lineStyle}
             data={ data }
             contentInset={ { top: 20, bottom: 20 } }
             curve={ shape.curveNatural }
@@ -37,7 +34,6 @@ class CustomChart extends React.PureComponent {
                 stroke: 'url(#gradient)',
             }}
           >
-            <Grid/>
             <Gradient/>
           </LineChart>
         </View>

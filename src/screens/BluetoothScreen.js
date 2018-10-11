@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { BleManager } from 'react-native-ble-plx';
 // Elements
 import {
-  View, Text, Button, Switch, Image, TouchableOpacity
+  View, Text, Switch, Image, TouchableOpacity
 } from 'react-native';
 import styles from '../styles/BluetoothStyle';
 import CustomDevicesItem from '../components/CustomDevicesItem';
@@ -15,7 +15,7 @@ import * as connectActions from '../reducers/bluetooth/actions';
 import { CONNECTED } from '../reducers/nav/actionTypes'
 // Strings
 import {
-  HeaderBluetooth,
+  HeaderBluetooth, targetDeviceName,
   LabelBluetoothToggleOn, LabelBluetoothToggleOff, LabelBluetoothListTitle, LabelBluetoothNotConnect
 } from '../constants/string';
 // Colors
@@ -43,38 +43,38 @@ class BluetoothScreen extends Component{
   // Functions
   _toggleBluetooth = (value) => {
     this.setState({isON: value})
-
-    console.log('Switch is: ' + value)
     value ? this._scan() : this._stop()
  }
 
   _scan = () => {
-    this.timeOut = setTimeout(this._stop, 5000);
+    this.setState({deviceNames: [], deviceList: []})
+    this.timeOut = setTimeout(this._stop, 5000)
     this.manager.startDeviceScan(null,
                                 null, (error, device) => {
                                   
-      console.log("scan : "+device)
+      console.log("scan : "+device.name)
       
       if(device){
-      //if(device.name && device.name.startsWith("Nordic")){
-        if(this.state.deviceNames.indexOf(device.name) == -1){
-          this.setState({
-            deviceNames: update(
-                      this.state.deviceNames, 
-                      {
-                        $push: [device.name],
-                      }),
-            deviceList: update(
-                      this.state.deviceList, 
-                      {
-                        $push: [device],
-                      }),
-          })
+        if(device.name && device.name.startsWith(targetDeviceName)){
+          if(this.state.deviceNames.indexOf(device.name) == -1){
+            this.setState({
+              deviceNames: update(
+                        this.state.deviceNames, 
+                        {
+                          $push: [device.name],
+                        }),
+              deviceList: update(
+                        this.state.deviceList, 
+                        {
+                          $push: [device],
+                        }),
+            })
+          }
         }
       }
 
       if (error) {
-        this.setState({error: true, errorMsg: error.message})
+        this.setState({isON: false, error: true, errorMsg: error.message})
         return
       }
     });
@@ -82,13 +82,19 @@ class BluetoothScreen extends Component{
 
   _stop = () => {
     this.manager.stopDeviceScan()
-    this.setState({isON: false, error: false})
+    this.setState({error: false})
     clearTimeout(this.timeOut)
     console.log('scan stop')
+    console.log(this.state.deviceNames)
   }
 
   _connect = (device) => {
-    console.log(device)
+    const { ConnectActions } = this.props;
+
+    this._stop();
+    try{
+      ConnectActions.connect(device);
+    }catch(e){}
   }
 
   // LifeCycle
@@ -97,16 +103,16 @@ class BluetoothScreen extends Component{
   }
 
   componentWillReceiveProps(nextProps) {
-    const { goToMain, isConnected } = nextProps;
-    console.log(nextProps)
+    const { goToMain, isConnected, error, loading } = nextProps;
 
+    if(error) this.setState({isON: false, error: true, errorMsg: error.message})
+    else if(isConnected) goToMain();
   }
 
   render(){
     const { goToMain } = this.props;
     return(
       <View style={styles.container}>
-        {console.log(this.props)}
 
         {/* Header View */}
         <View style={styles.headerBox}>
@@ -178,7 +184,6 @@ export default connect(
     isConnected: state.bluetooth.isConnected,
     loading: state.bluetooth.pending,
     error: state.bluetooth.error,
-    device: state.bluetooth.device
   }),
   (dispatch) => ({
       ConnectActions: bindActionCreators(connectActions, dispatch),
