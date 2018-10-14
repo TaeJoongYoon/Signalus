@@ -33,18 +33,20 @@ class SplashScreen extends Component{
     let id;
     let password;
 
-    AsyncStorage.multiGet(['id', 'pw', 'device']).then((value) => {   // Check LocalStorage
-      id =  value[0][1];
-      password =  value[1][1];
-      device = value[2][1];
-
-      if(id != null && password != null) {    // Login
-        this._login(id,password)
-        .catch((e) =>{})
-      } else {
-        goToSignIn();
-      }
-    })
+    setTimeout(()=>{
+      AsyncStorage.multiGet(['id', 'pw', 'device']).then((value) => {   // Check LocalStorage
+        id =  value[0][1];
+        password =  value[1][1];
+        device = value[2][1];
+  
+        if(id != null && password != null) {    // Login
+          this._login(id,password)
+          .catch((e) =>{})
+        } else {
+          goToSignIn();
+        }
+      })
+    },2000)
   }
 
   componentWillReceiveProps(nextProps) {
