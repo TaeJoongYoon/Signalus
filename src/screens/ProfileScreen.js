@@ -3,8 +3,11 @@ import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 // Elements
 import {
-  View, AsyncStorage, Text, Button, Image
+  View, AsyncStorage, Text, Switch, TextInput
 } from 'react-native';
+import { Divider } from 'react-native-elements'
+import CustomFAB from '../components/CustomFAB';
+import CustomFilledButton from '../components/CustomFilledButton';
 import styles from '../styles/ProfileStyle';
 // Actions
 import * as withdrawActions from '../reducers/auth/actions';
@@ -14,8 +17,12 @@ import {
 // Strings
 import { 
   HeaderProfile,
+  LabelAlertTitle, LabelAlertStatusOn, LabelAlertStatusOff, LabelRegisterContact, LabelRegisterButton,
+  LabelPhoneListTitle,
  } from '../constants/string';
 import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';
+import FAB from 'react-native-fab';
+import { mainColor, divider, disable } from '../constants/color';
 
 class ProfileScreen extends Component{
   static navigationOptions = {
@@ -26,6 +33,7 @@ class ProfileScreen extends Component{
   constructor(props){
     super(props)
     this.state= {
+      isOn: true,
       id:'',
       password:'',
       token:'',
@@ -83,18 +91,63 @@ class ProfileScreen extends Component{
     const { setting } = this.props;
     return(
       <View style={styles.container}>
-        <Text>This is Profile</Text>
-        <Button
-          title={`Logout`}
-          onPress={this._logout}
-        />
-        <Button
-          title={`Withdraw`}
-          onPress={this._withdraw}
-        />
-        <Button
-          title={`Setting`}
-          onPress={setting}
+
+        {/* Alert Setting View */}
+        <View style={styles.upper}>
+          <View>
+            <Text style={styles.sectionTitle}>
+                {LabelAlertTitle}
+            </Text>
+            <Text style={this.state.isOn ? styles.alertStatusOn : styles.alertStatusOff}>
+                {this.state.isOn ? LabelAlertStatusOn : LabelAlertStatusOff}
+            </Text>
+          </View>
+          <Switch
+            onTintColor={mainColor}
+            onValueChange = {(value) => this.setState({isOn: value})}
+            value = {this.state.isOn}
+          />
+        </View>
+
+        <Divider style={{backgroundColor: disable, height: 1}}/>
+
+        {/* Register Contact View */}
+        <View style={styles.registerContact}>
+          <Text style={styles.sectionTitle}>
+            {LabelRegisterContact}
+          </Text>
+          <View style={styles.registerView}>
+            <TextInput
+              style={styles.registerInput}
+              placeholder=""
+              onChangeText={(text) => console.log(text)}
+            />  
+            <CustomFilledButton
+              style={styles.registerButton}
+              title={LabelRegisterButton}
+              disabled={false}
+              onPress={() => console.log("D")}
+            />
+          </View>
+        </View>
+
+        <Divider style={{backgroundColor: disable, height: 1}}/>
+
+        {/* Registered Contact List View */}
+        <View style={styles.phoneList}>
+          <Text style={styles.sectionTitle}>
+            {LabelPhoneListTitle}
+          </Text>
+        </View>
+
+        {/* Floating Action Button */}
+        <CustomFAB
+          buttonColor={mainColor}
+          iconTextColor={'white'}
+          onClickAction={setting}
+          visible={true}
+          iconTextComponent={ <Text>=</Text>
+          }
         />
       </View>
     );

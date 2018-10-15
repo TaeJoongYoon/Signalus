@@ -1,0 +1,24 @@
+import React, { Component } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import FAB from 'react-native-fab';
+
+class CustomFAB extends Component {
+  constructor(props){
+    super(props)
+  }
+
+  render(){
+    const {buttonColor, iconTextColor, onClickAction, visible, iconTextComponent } = this.props;
+    return(
+          <FAB
+            buttonColor={buttonColor}
+            iconTextColor={iconTextColor}
+            onClickAction={onClickAction}
+            visible={visible}
+            iconTextComponent={iconTextComponent}
+          />
+      );
+  }
+}
+
+export default CustomFAB;

@@ -8,6 +8,7 @@ import { BleManager } from 'react-native-ble-plx';
 import {
   View, Text, Switch, Image, TouchableOpacity
 } from 'react-native';
+import { Divider } from 'react-native-elements';
 import styles from '../styles/BluetoothStyle';
 import CustomDevicesItem from '../components/CustomDevicesItem';
 // Actions
@@ -20,7 +21,7 @@ import {
 } from '../constants/string';
 // Colors
 import { mainColor, placeholderText } from '../constants/color';
-import { Divider } from 'react-native-elements';
+
 
 class BluetoothScreen extends Component{
   static navigationOptions = {
