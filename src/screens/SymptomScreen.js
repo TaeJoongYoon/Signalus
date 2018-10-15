@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 // Elements
 import {
-  View, Text, Button
+  View, ScrollView
 } from 'react-native';
 import { Icon } from 'react-native-elements'
 import CustomSymptomItem from '../components/CustomSymptomItem';
@@ -17,7 +18,8 @@ import {
   HeaderSymptom,
  } from '../constants/string';
  // Colors
- import { mainColor, divider, disable } from '../constants/color';
+import { mainColor } from '../constants/color';
+import { symptoms } from '../constants/utils'; 
 
 class SymptomScreen extends Component{
   static navigationOptions = {
@@ -47,15 +49,26 @@ class SymptomScreen extends Component{
   render(){
     return(
       <View style={styles.container}>
-        <Text>This is Symptom</Text>
-        <Button
-          title='DetailDevice'
-          onPress={() => this._goToDetailDevice()}
-        />
-        <Button
-          title='DetailUser'
-          onPress={() => this._goToDetailUser()}
-        />
+
+        {/* Symptom List */}
+        <ScrollView>
+          {_.map(symptoms, symptom => {
+            return (
+              <CustomSymptomItem
+                key={symptom.key}
+                style={styles.itemView}
+                type={symptom.type}
+                typeStyle={symptom.type == "device" ? styles.fromDevice : styles.fromUser}
+                titleStyle={styles.titleStyle}
+                divider={styles.divider}
+                title={symptom.title}
+                dateStyle={styles.dateStyle}
+                date={symptom.date}
+                onPress={() => symptom.type == "device" ? this._goToDetailDevice() : this._goToDetailUser()}
+              />
+            );
+          })}
+        </ScrollView>
 
         {/* Floating Action Button */}
         <CustomFAB

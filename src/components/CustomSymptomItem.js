@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { Divider } from 'react-native-elements';
+import { LabelSymptomFromDevice, LabelSymptomFromUser } from '../constants/string';
 
 class CustomSymptomItem extends Component {
   constructor(props){
@@ -8,15 +9,27 @@ class CustomSymptomItem extends Component {
   }
 
   render(){
-    const { style, text, divider, title, onPress } = this.props;
+    const { style, type, typeStyle, titleStyle, dateStyle, divider, title, date, onPress } = this.props;
     
     return(
-        <View style={style}>
+        <View>
           <TouchableOpacity onPress={onPress}>
-            <Text style={text}
-              pointerEvents='none'>
-            {title}
-            </Text>
+          <View style={style}>
+            <View>
+              <Text style={typeStyle}>
+                  {type == "device" ? LabelSymptomFromDevice : LabelSymptomFromUser}
+              </Text>
+              <Text style={titleStyle}>
+                {title}
+              </Text>
+            </View>
+            <View style={{flex: 1, flexDirection: 'column', alignItems: 'flex-end'}}>
+              <Text></Text>
+              <Text style={dateStyle}>
+                {date}
+              </Text>
+            </View>
+          </View>
           </TouchableOpacity>
           <Divider style={divider} />
         </View>
