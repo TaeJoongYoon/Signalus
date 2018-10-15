@@ -5,6 +5,7 @@ import {
   View, Text, Button
 } from 'react-native';
 import { Icon } from 'react-native-elements'
+import CustomSymptomItem from '../components/CustomSymptomItem';
 import CustomFAB from '../components/CustomFAB';
 import styles from '../styles/SymptomStyle';
 // Actions
