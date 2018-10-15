@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import {
   View, AsyncStorage, Text, Switch, TextInput
 } from 'react-native';
-import { Divider } from 'react-native-elements'
+import { Divider, Icon } from 'react-native-elements'
 import CustomFAB from '../components/CustomFAB';
 import CustomFilledButton from '../components/CustomFilledButton';
 import styles from '../styles/ProfileStyle';
@@ -14,14 +14,14 @@ import * as withdrawActions from '../reducers/auth/actions';
 import {
   SIGNOUT, RESIGNED, ON_SETTING
 } from '../reducers/nav/actionTypes'
+import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';
 // Strings
 import { 
   HeaderProfile,
   LabelAlertTitle, LabelAlertStatusOn, LabelAlertStatusOff, LabelRegisterContact, LabelRegisterButton,
   LabelPhoneListTitle,
  } from '../constants/string';
-import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';
-import FAB from 'react-native-fab';
+// Colors
 import { mainColor, divider, disable } from '../constants/color';
 
 class ProfileScreen extends Component{
@@ -146,7 +146,11 @@ class ProfileScreen extends Component{
           iconTextColor={'white'}
           onClickAction={setting}
           visible={true}
-          iconTextComponent={ <Text>=</Text>
+          iconTextComponent={
+            <Icon
+              name='menu'
+              color='white'
+            />
           }
         />
       </View>

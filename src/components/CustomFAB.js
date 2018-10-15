@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
 import FAB from 'react-native-fab';
 
 class CustomFAB extends Component {

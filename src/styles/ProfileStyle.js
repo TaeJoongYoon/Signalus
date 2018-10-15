@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   alertStatusOff:{
     color: disable,
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: 'bold'
   },
   registerContact:{

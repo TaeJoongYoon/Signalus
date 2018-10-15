@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // Elements
 import {
-  View, Text, Button, Image
+  View, Text, Button
 } from 'react-native';
+import { Icon } from 'react-native-elements'
+import CustomFAB from '../components/CustomFAB';
 import styles from '../styles/SymptomStyle';
 // Actions
 import { 
@@ -13,6 +15,8 @@ import {
 import { 
   HeaderSymptom,
  } from '../constants/string';
+ // Colors
+ import { mainColor, divider, disable } from '../constants/color';
 
 class SymptomScreen extends Component{
   static navigationOptions = {
@@ -44,16 +48,26 @@ class SymptomScreen extends Component{
       <View style={styles.container}>
         <Text>This is Symptom</Text>
         <Button
-          title='Log'
-          onPress={() => this._goToLog()}
-        />
-        <Button
           title='DetailDevice'
           onPress={() => this._goToDetailDevice()}
         />
         <Button
           title='DetailUser'
           onPress={() => this._goToDetailUser()}
+        />
+
+        {/* Floating Action Button */}
+        <CustomFAB
+          buttonColor={mainColor}
+          iconTextColor={'white'}
+          onClickAction={() => this._goToLog()}
+          visible={true}
+          iconTextComponent={
+            <Icon
+              name='add'
+              color='white'
+            />
+          }
         />
       </View>
     );
