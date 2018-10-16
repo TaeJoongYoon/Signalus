@@ -49,8 +49,6 @@ Also, you can check your heart status easily.
 | react-native-svg               | 6.5.2       |
 | react-native-svg-charts        | 5.2.0       |
 | react-native-vector-icons      | 5.0.0       |
-| react-native-svg-charts        | 5.2.0       |
-| react-native-vector-icons      | 5.0.0       |
 | react-navigation               | 2.8.0       |
 | react-navigation-redux-helpers | 2.0.3       |
 | react-redux                    | 5.0.7       |
