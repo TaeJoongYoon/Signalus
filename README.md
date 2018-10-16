@@ -18,13 +18,13 @@ Also, you can check your heart status easily.
 
 *All views*
 
-![All Pages](./Landing.jpg)
+![All Pages](./README/Landing.jpg)
 
 
 
 *Pages*
 
-![All Pages](./Pages.jpg)
+![All Pages](./README/Pages.jpg)
 
 
 
@@ -43,9 +43,15 @@ Also, you can check your heart status easily.
 | react-native-svg               | 6.5.2       |
 | react-native-svg-charts        | 5.2.0       |
 | react-native-vector-icons      | 5.0.0       |
+| react-native-svg-charts        | 5.2.0       |
+| react-native-vector-icons      | 5.0.0       |
 | react-navigation               | 2.8.0       |
 | react-navigation-redux-helpers | 2.0.3       |
 | react-redux                    | 5.0.7       |
 | redux                          | 4.0.0       |
 | redux-promise-middleware       | 5.1.1       |
 | redux-thunk                    | 2.3.0       |
+|                                |             |
+
+
+
