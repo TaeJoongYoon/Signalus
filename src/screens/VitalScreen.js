@@ -6,16 +6,23 @@ import update from 'react-addons-update';
 import {
   View, Text, Image, TouchableOpacity
 } from 'react-native';
-import styles from '../styles/VitalStyle';
+import { Card, Divider, Icon  } from 'react-native-elements';
+import { Defs, LinearGradient, Stop } from 'react-native-svg'
+import Gradient from '../components/Gradient';
 import CustomChart from '../components/CustomChart';
+import CustomHealthStatusBar from '../components/CustomHealthStatusBar';
+import styles from '../styles/VitalStyle';
 // Actions
 import { ON_CALENDAR, NOT_CONNECTED } from '../reducers/nav/actionTypes';
+import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';
 // String
 import { 
   HeaderVital,
   heartRateMeasurementUUID, bodySensorLocationUUID, batteryLevelUUID, deviceInfoUUID,
+  LabelNowBPM, LabelBPMHighLow, LabelSpO2, LabelStress,
  } from '../constants/string';
-import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';
+ // Colors
+import { disable, mainColor, divider } from '../constants/color';
 
 class VitalScreen extends Component{
   static navigationOptions = ({ navigation }) => {
@@ -36,7 +43,11 @@ class VitalScreen extends Component{
   constructor(props){
     super(props)
     this.state = {
-      data: [],
+      data: [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ],
+      time:'',
+      bpm:102,
+      bpmHigh:132,
+      bpmLow:64,
       connected: false,
       error: false,
       errorMsg: '',
@@ -135,10 +146,30 @@ class VitalScreen extends Component{
     }
   }
 
+  _startTime = () => {
+    let today = new Date();
+    let h = today.getHours();
+    let m = today.getMinutes();
+    let s = today.getSeconds();
+    m = this._checkTime(m);
+    s = this._checkTime(s);
+
+    const now = h > 12 ? `오후 ${h-12} : ${m} : ${s}` : `오전 ${h} : ${m} : ${s}`
+
+    this.setState({time:now})
+  }
+
+  _checkTime = (i) => {
+      if (i < 10) {i = "0" + i};
+      return i;
+  }
+
   // LifeCyle
   componentDidMount(){
     const { navigation, device, isConnected } = this.props;
     
+    this._timer = setInterval(this._startTime, 1000);
+
     navigation.setParams({ clickCalendar: this._goToCalendar });
     if(isConnected) this._connectToDevice(device);
   }
@@ -146,12 +177,66 @@ class VitalScreen extends Component{
   render(){
     return(
       <View style={styles.container}>
-      <CustomChart
-        data={this.state.data}
-        viewStyle={styles.viewStyle}
-        lineStyle={styles.lineStyle}
-      />
-      {this.state.error && <Text>{this.state.errorMsg}</Text>}
+
+        {/* ECG Graph */}
+        <CustomChart
+          data={this.state.data}
+        />
+
+
+        {/* BPM CardView */}
+        <View style={styles.card}>
+          <Card containerStyle={styles.cardView}>
+            <View style={styles.bpmStatus}>
+              <View style={{flex:3}}>
+                <Text style={{marginBottom: 10, color: divider}}>{`${LabelNowBPM}\t`} <Text style={{color: mainColor}}>{"정상"}</Text> </Text>
+                <Text style={{fontSize:20}}>{this.state.time}</Text>
+              </View>
+              <View style={{flex:1}}>
+                <Text style={{color: mainColor, fontSize:45, fontWeight:'bold'}}>{this.state.bpm}</Text>
+              </View>
+            </View>
+            <Divider style={{backgroundColor: disable, height: 1}}/>
+            <View style={{flexDirection:'row', alignItems:'center', height:50}}>
+              <View style={{flex:2}}>
+                <Text style={{color: divider}}>{LabelBPMHighLow}</Text>
+              </View>
+              <View style={{flex:1, flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                <View style={{flexDirection:'row', alignItems:'center'}}>
+                  <Icon
+                    name='arrow-upward'
+                    color={divider}
+                  />
+                  <Text style={{color: divider, fontSize:16, fontWeight:'bold'}}>{this.state.bpmHigh}</Text>
+                </View>
+                <View style={{flexDirection:'row', alignItems:'center'}}>
+                  <Icon
+                    name='arrow-downward'
+                    color={divider}
+                  />
+                  <Text style={{color: divider, fontSize:16, fontWeight:'bold'}}>{this.state.bpmLow}</Text>
+                </View>
+              </View>
+            </View>
+          </Card>
+        </View>
+
+        {/* SpO2 and Stress CardView */}
+        <View style={styles.card}>
+          <Card containerStyle={styles.cardView}>
+            <CustomHealthStatusBar
+              title={LabelSpO2}
+              percent={0.98}
+           />
+            <Divider style={{backgroundColor: disable, height: 1}}/>
+            <CustomHealthStatusBar
+              title={LabelStress}
+              percent={0.89}
+            />
+          </Card>
+        </View>
+
+        {this.state.error && <Text>{this.state.errorMsg}</Text>}
       </View>
     );
   }
@@ -159,6 +244,7 @@ class VitalScreen extends Component{
   componentWillUnmount(){
     const { device } = this.props;
 
+    clearInterval(this._timer);
     device.cancelConnection();
     console.log(device.isConnected)
     this._subscription.remove();

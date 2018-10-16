@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { CheckBox } from 'react-native-elements'
 import { checkboxSize } from '../constants/dimens'
-import { placeholderText } from '../constants/color';
+import { placeholderText, mainColor } from '../constants/color';
 
 class CustomCheckBox extends Component {
   constructor(props){
@@ -20,7 +20,7 @@ class CustomCheckBox extends Component {
             iconType='material'
             checkedIcon='check-box'
             uncheckedIcon='check-box-outline-blank'
-            checkedColor='green'
+            checkedColor={mainColor}
             checked={checked}
             onPress={onPress}
           />
