@@ -34,6 +34,8 @@ class BluetoothScreen extends Component{
     this.timeOut
     this.state = {
       isON: false,
+      isScanning: false,
+      isScanned: false,
       deviceNames: [],
       deviceList: [],
       error: false,
@@ -48,14 +50,13 @@ class BluetoothScreen extends Component{
  }
 
   _scan = () => {
-    this.setState({deviceNames: [], deviceList: []})
+    this.setState({isScanning: true, isScanned: false, deviceNames: [], deviceList: []})
     this.timeOut = setTimeout(this._stop, 5000)
     this.manager.startDeviceScan(null,
                                 null, (error, device) => {
                                   
-      console.log("scan : "+device.name)
-      
       if(device){
+        console.log("scan : "+device.name)
         if(device.name && device.name.startsWith(targetDeviceName)){
           if(this.state.deviceNames.indexOf(device.name) == -1){
             this.setState({
@@ -75,7 +76,9 @@ class BluetoothScreen extends Component{
       }
 
       if (error) {
-        this.setState({isON: false, error: true, errorMsg: error.message})
+        this.manager.stopDeviceScan()
+        clearTimeout(this.timeOut)
+        this.setState({isON: false, isScanning:false, isScanned:false, error: true, errorMsg: error.message})
         return
       }
     });
@@ -83,10 +86,9 @@ class BluetoothScreen extends Component{
 
   _stop = () => {
     this.manager.stopDeviceScan()
-    this.setState({error: false})
+    this.setState({isScanning: false, isScanned: true, error: false})
     clearTimeout(this.timeOut)
     console.log('scan stop')
-    console.log(this.state.deviceNames)
   }
 
   _connect = (device) => {
@@ -104,14 +106,15 @@ class BluetoothScreen extends Component{
   }
 
   componentWillReceiveProps(nextProps) {
-    const { goToMain, isConnected, error, loading } = nextProps;
+    const { goToMain, isConnected, error } = nextProps;
 
-    if(error) this.setState({isON: false, error: true, errorMsg: error.message})
+    if(error) this.setState({isON: false, isScanning:false, isScanned:false, error: true, errorMsg: error.message})
     else if(isConnected) goToMain();
   }
 
   render(){
     const { goToMain } = this.props;
+
     return(
       <View style={styles.container}>
 
@@ -121,7 +124,7 @@ class BluetoothScreen extends Component{
             {this.state.isON ? LabelBluetoothToggleOn : LabelBluetoothToggleOff}
           </Text>
           <View style={styles.toggleView}>
-            {this.state.isON ?
+            {this.state.isScanning ?
               <Image
                 style={{width: 26, height: 26, margin: 10}}
                 source={require('../../assets/bluetoothSync.png')}

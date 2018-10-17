@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // Elements
 import {
-  View, Text, Button
+  View, Text,
 } from 'react-native';
 import styles from '../styles/CalendarStyle';
 // Actions

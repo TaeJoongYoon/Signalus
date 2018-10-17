@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 // Elements
 import {
-  View, AsyncStorage, Text, Switch, TextInput
+  View, Text, Switch, TextInput
 } from 'react-native';
 import { Divider, Icon } from 'react-native-elements'
 import CustomFAB from '../components/CustomFAB';
 import CustomFilledButton from '../components/CustomFilledButton';
 import styles from '../styles/ProfileStyle';
 // Actions
-import * as withdrawActions from '../reducers/auth/actions';
-import {
-  SIGNOUT, RESIGNED, ON_SETTING
-} from '../reducers/nav/actionTypes'
+import { ON_SETTING } from '../reducers/nav/actionTypes'
 import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';
 // Strings
 import { 
@@ -22,7 +18,7 @@ import {
   LabelPhoneListTitle,
  } from '../constants/string';
 // Colors
-import { mainColor, divider, disable } from '../constants/color';
+import { mainColor, disable } from '../constants/color';
 
 class ProfileScreen extends Component{
   static navigationOptions = {
@@ -34,57 +30,18 @@ class ProfileScreen extends Component{
     super(props)
     this.state= {
       isOn: true,
-      id:'',
-      password:'',
-      token:'',
     }
   }
 
   // Functions
-  _logout = () => {
-    const { device, isConnected, disconnect, logout } = this.props;
-    
-    if(isConnected){
-      device.cancelConnection()
-      disconnect();
-    }
-
-    AsyncStorage.multiRemove(['id', 'pw', 'token', 'device']).then(() => {    // Clear LocalStorage
-      logout();
-    })
-  }
-
-  _withdraw = () => {
-    const { device, isConnected, disconnect, WithdrawActions } = this.props;
-
-    if(isConnected){
-      device.cancelConnection()
-      disconnect();
-    }
-    
-    AsyncStorage.multiRemove(['id', 'pw', 'token', 'device']).then(() => {    // Clear LocalStorage
-      try{
-        WithdrawActions.withdraw(this.state.id, this.state.token);    // Withdraw the Account
-      }catch(e){}
-    })
-  }
 
   // LifeCycle
   componentDidMount(){
-    AsyncStorage.multiGet(['id', 'pw', 'token']).then((value) => {    // Get Data From LocalStorage
-      id = value[0][1];
-      password = value[1][1];
-      token = value[2][1];
-
-      this.setState({id: id, password: password, token: token})
-    })
+    
   }
 
   componentWillReceiveProps(nextProps) {
-    const { logout, isLoggedIn } = nextProps;
-    if(!isLoggedIn){
-      logout();
-    } 
+    
   }
 
   render(){
@@ -162,14 +119,9 @@ export default connect(
   (state) => ({
     device: state.bluetooth.device,
     isConnected: state.bluetooth.isConnected,
-    loading: state.auth.pending,
-    isLoggedIn : state.auth.isLoggedIn,
-    error: state.auth.error
   }),
   (dispatch) => ({
-      WithdrawActions: bindActionCreators(withdrawActions, dispatch),
       setting: () => dispatch({ type: ON_SETTING }),
-      logout: () => dispatch({ type: SIGNOUT}),
       disconnect: () => dispatch({ type: DISCONNECT_SUCCESS })
   })
 )(ProfileScreen);

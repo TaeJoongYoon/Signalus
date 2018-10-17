@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // Elements
 import {
-  View, Button
+  View,
 } from 'react-native';
 import { Divider } from 'react-native-elements';
 import CustomCheckBox from '../components/CustomCheckBox';

@@ -14,6 +14,10 @@ class CustomFormInput extends Component {
     }
   }
 
+  _focus = () => {
+
+  }
+
   _onFocus = () => {
     this.setState({focus: true})
   }
@@ -27,7 +31,7 @@ class CustomFormInput extends Component {
   }
 
   render(){
-    const { style, iconStyle, placeholder, isIcon, type, onChangeText, maxLength, clearButtonMode, secureTextEntry, error, errorMsg } = this.props;
+    const { childRef, onSubmitEditing, blurOnSubmit, style, iconStyle, placeholder, isIcon, type, onChangeText, maxLength, returnKeyType, clearButtonMode, secureTextEntry, error, errorMsg } = this.props;
     let iconSRC
 
     if(isIcon){
@@ -44,6 +48,9 @@ class CustomFormInput extends Component {
     return(
         <View>
           <Input
+            ref={childRef}
+            onSubmitEditing={onSubmitEditing}
+            blurOnSubmit={blurOnSubmit}
             containerStyle={style}
             selectionColor={mainColor}
             onFocus={() => this._onFocus()}
@@ -54,6 +61,7 @@ class CustomFormInput extends Component {
             onChangeText={onChangeText}
             maxLength={maxLength ? maxLength : defaultMaxLength}
             secureTextEntry={secureTextEntry}
+            returnKeyType={returnKeyType}
             clearButtonMode={clearButtonMode}
             shake={error}
             autoCorrect={false}

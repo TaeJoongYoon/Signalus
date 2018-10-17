@@ -4,11 +4,9 @@ import { getDecValue } from '../constants/utils';
 import update from 'react-addons-update';
 // Elements
 import {
-  View, Text, Image, TouchableOpacity
+  View, Text, Image, TouchableOpacity,
 } from 'react-native';
 import { Card, Divider, Icon  } from 'react-native-elements';
-import { Defs, LinearGradient, Stop } from 'react-native-svg'
-import Gradient from '../components/Gradient';
 import CustomChart from '../components/CustomChart';
 import CustomHealthStatusBar from '../components/CustomHealthStatusBar';
 import styles from '../styles/VitalStyle';
@@ -43,11 +41,13 @@ class VitalScreen extends Component{
   constructor(props){
     super(props)
     this.state = {
-      data: [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ],
+      data: [],
       time:'',
       bpm:102,
       bpmHigh:132,
       bpmLow:64,
+      SpO2:0.98,
+      stress:0.89,
       connected: false,
       error: false,
       errorMsg: '',
@@ -226,12 +226,12 @@ class VitalScreen extends Component{
           <Card containerStyle={styles.cardView}>
             <CustomHealthStatusBar
               title={LabelSpO2}
-              percent={0.98}
+              percent={this.state.SpO2}
            />
             <Divider style={{backgroundColor: disable, height: 1}}/>
             <CustomHealthStatusBar
               title={LabelStress}
-              percent={0.89}
+              percent={this.state.stress}
             />
           </Card>
         </View>

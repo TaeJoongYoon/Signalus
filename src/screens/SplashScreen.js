@@ -32,6 +32,7 @@ class SplashScreen extends Component{
 
     let id;
     let password;
+    let device;
 
     setTimeout(()=>{
       AsyncStorage.multiGet(['id', 'pw', 'device']).then((value) => {   // Check LocalStorage
@@ -50,11 +51,10 @@ class SplashScreen extends Component{
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isLoggedIn, goToMain, goToSignIn, goToBluetooth } = nextProps;
+    const { isLoggedIn, goToSignIn, goToBluetooth } = nextProps;
 
     isLoggedIn ? goToBluetooth() : goToSignIn()
 
-    //isLoggedIn ? goToMain() : goToSignIn()
   }
 
   render(){

@@ -13,7 +13,7 @@ import { defaultMinLength } from '../constants/dimens';
 // Actions
 import * as loginActions from '../reducers/auth/actions';
 import {
-  SIGNED, NOT_CONNECTED, ON_CONSENT, CONNECTED
+  NOT_CONNECTED, ON_CONSENT
 } from '../reducers/nav/actionTypes'
 // Strings
 import {
@@ -60,11 +60,10 @@ class SignInScreen extends Component{
 
   // LifeCycle
   componentWillReceiveProps(nextProps) {
-    const { goToMain, goToBluetooth, isLoggedIn } = nextProps;
+    const { goToBluetooth, isLoggedIn } = nextProps;
 
     if(isLoggedIn){
       goToBluetooth();
-      //goToMain();   // Go to MainScreen
     } 
   }
 
@@ -87,7 +86,9 @@ class SignInScreen extends Component{
         </View>
         
        {/* ID Form */}
-        <CustomFormInput 
+        <CustomFormInput
+          onSubmitEditing={() => this.refs.passwordForm.refs.passwordTextInput.focus()}
+          blurOnSubmit={false}
           style={styles.input}
           iconStyle={styles.icon}
           isIcon={true}
@@ -95,6 +96,7 @@ class SignInScreen extends Component{
           placeholder={PlaceholderId}
           onChangeText={(id) => this.setState({id})}
           maxLength={20}
+          returnKeyType="next"
           clearButtonMode="never"
           error={this.state.idError}
           errorMsg={ErrorMsgId}
@@ -102,6 +104,10 @@ class SignInScreen extends Component{
 
         {/* PW Form */}
         <CustomFormInput
+          ref="passwordForm"
+          childRef="passwordTextInput"
+          onSubmitEditing={() => this._login()}
+          blurOnSubmit={false}
           style={styles.input}
           iconStyle={styles.icon}
           isIcon={true}
@@ -109,6 +115,7 @@ class SignInScreen extends Component{
           placeholder={PlaceholderPassword}
           onChangeText={(password) => this.setState({password})}
           maxLength={20}
+          returnKeyType="done"
           clearButtonMode="always"
           secureTextEntry={true}
           error={this.state.pwError}
@@ -156,7 +163,6 @@ export default connect(
   }),
   (dispatch) => ({
       LoginActions: bindActionCreators(loginActions, dispatch),
-      goToMain: () => dispatch({ type: SIGNED}),
       goToBluetooth: () => dispatch({ type: NOT_CONNECTED}),
       goToConsent: () => dispatch({ type: ON_CONSENT}),
   })

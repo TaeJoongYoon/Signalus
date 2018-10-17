@@ -17,7 +17,7 @@ import {
   LabelFainted, LabelFluttering, LabelLightHeaded, LabelVomiting,
 } from '../constants/string';
 // Colors
-import { mainColor, divider, disable } from '../constants/color';
+import { disable } from '../constants/color';
 
 class SymptomLogScreen extends Component{
   static navigationOptions = ({ navigation }) => {

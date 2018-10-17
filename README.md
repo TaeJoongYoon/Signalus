@@ -55,3 +55,4 @@ Also, you can check your heart status easily.
 | redux                          | 4.0.0       |
 | redux-promise-middleware       | 5.1.1       |
 | redux-thunk                    | 2.3.0       |
+

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import * as Progress from 'react-native-progress';
-import { WIDTH, HEIGHT } from '../constants/dimens';
+import { HEIGHT } from '../constants/dimens';
 import { LabelNormal, LabelWarning, LabelEmergency } from '../constants/string';
 import { mainColor, divider } from '../constants/color';
 

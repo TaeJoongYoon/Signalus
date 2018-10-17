@@ -2,7 +2,7 @@ import React from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 import { LineChart } from 'react-native-svg-charts'
 import * as shape from 'd3-shape'
-import { WIDTH, HEIGHT, borderRadius } from '../constants/dimens';
+import { HEIGHT } from '../constants/dimens';
 import { mainColor, highlightColor } from '../constants/color'
 
 class CustomChart extends React.PureComponent {
