@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 // Elements
 import {
-  View, Animated, Text, Keyboard
+  View, Animated, Text, TouchableWithoutFeedback, Keyboard
 } from 'react-native';
 import CustomFormInput from '../components/CustomFormInput';
 import CustomFormPicker from '../components/CustomFormPicker';
@@ -134,6 +134,7 @@ class RegisterScreen extends Component{
   render(){
     const { error } = this.props;
     return(
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
         <Text style={styles.title}>  
           {LabelRegisterTitle}
@@ -230,6 +231,7 @@ class RegisterScreen extends Component{
                 mode={this.state.mode}/>
             }
       </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

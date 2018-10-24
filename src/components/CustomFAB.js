@@ -10,6 +10,7 @@ class CustomFAB extends Component {
     const {buttonColor, iconTextColor, onClickAction, visible, iconTextComponent } = this.props;
     return(
           <FAB
+            style={{flex: 1}}
             buttonColor={buttonColor}
             iconTextColor={iconTextColor}
             onClickAction={onClickAction}

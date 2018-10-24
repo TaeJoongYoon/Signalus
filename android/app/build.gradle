@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-contacts')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-ble-plx')
     compile project(':react-native-svg')

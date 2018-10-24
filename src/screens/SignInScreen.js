@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 // Elements
 import {
- Image, View, Text, TouchableOpacity
+ Image, View, Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard
 } from 'react-native';
 import CustomFormInput from '../components/CustomFormInput';
 import CustomFilledButton from '../components/CustomFilledButton';
@@ -71,6 +71,7 @@ class SignInScreen extends Component{
     const { error, goToConsent } = this.props;
 
     return(
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
         
         {/* Logo */}
@@ -150,6 +151,7 @@ class SignInScreen extends Component{
         />
         
       </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

@@ -17,9 +17,9 @@ class CustomHealthStatusBar extends Component {
   componentDidMount(){
     const { percent } = this.props;
 
-    if(percent > 0.95){
+    if(percent > 95){
       this.setState({status: LabelNormal, color: mainColor})
-    } else if(percent > 0.85 && percent <= 0.95){
+    } else if(percent > 85 && percent <= 95){
       this.setState({status: LabelWarning, color: '#e9e063'})
     } else{
       this.setState({status: LabelEmergency, color: 'red'})
@@ -33,13 +33,25 @@ class CustomHealthStatusBar extends Component {
       <View style={{flexDirection: 'row', alignItems:'center', height:HEIGHT * 0.11}}>
         <View style={{flex:4, paddingRight: 20}}>
           <Text style={{marginBottom: 10, color: divider}}>{`${title}\t`} <Text style={{color: this.state.color}}>{this.state.status}</Text> </Text>
-          <Progress.Bar color={this.state.color} width={null} progress={percent} />
+          <Progress.Bar color={this.state.color} width={null} progress={percent/100} />
         </View>
         <View style={{flex:1}}>
-          <Text style={{color: this.state.color, fontSize:30, fontWeight:'bold'}}>{percent*100}<Text style={{fontSize: 20}}>%</Text> </Text>
+          <Text style={{color: this.state.color, fontSize:28, fontWeight:'bold'}}>{percent}<Text style={{fontSize: 20}}>%</Text> </Text>
         </View>
       </View>
       );
+  }
+  
+  componentWillReceiveProps(nextProps){
+    const { percent } = nextProps;
+
+    if(percent > 95){
+      this.setState({status: LabelNormal, color: mainColor})
+    } else if(percent > 85 && percent <= 95){
+      this.setState({status: LabelWarning, color: '#e9e063'})
+    } else{
+      this.setState({status: LabelEmergency, color: 'red'})
+    }
   }
 }
 

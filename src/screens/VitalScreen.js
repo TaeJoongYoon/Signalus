@@ -16,7 +16,7 @@ import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';
 // String
 import { 
   HeaderVital,
-  heartRateMeasurementUUID, bodySensorLocationUUID, batteryLevelUUID, deviceInfoUUID,
+  ppgRawUUID, ppgHeartRate, ppgSpO2,
   LabelNowBPM, LabelBPMHighLow, LabelSpO2, LabelStress,
  } from '../constants/string';
  // Colors
@@ -46,8 +46,8 @@ class VitalScreen extends Component{
       bpm:102,
       bpmHigh:132,
       bpmLow:64,
-      SpO2:0.98,
-      stress:0.89,
+      SpO2:98,
+      stress:89,
       connected: false,
       error: false,
       errorMsg: '',
@@ -113,8 +113,9 @@ class VitalScreen extends Component{
   }
 
   _notifyCharacteristc = (characteristic) => {
-    if(characteristic.uuid == heartRateMeasurementUUID){
-      this._heartRateSubcription = characteristic.monitor((error, c) => {
+    switch(characteristic.uuid){
+      case ppgRawUUID:
+      this._ppgRawSubcription = characteristic.monitor((error, c) => {
         if(error) this.setState({error: true, errorMsg: error.message})
         if(c){
           const value = getDecValue(c)
@@ -143,6 +144,32 @@ class VitalScreen extends Component{
           }
         }
       });
+      break
+      case ppgHeartRate:
+      this._ppgHeartRateSubcription = characteristic.monitor((error, c) => {
+        if(error) this.setState({error: true, errorMsg: error.message})
+        if(c){
+          const value = getDecValue(c)
+          console.log(`---------------------------------------------------
+          Characteristic UUID : ${characteristic.uuid}
+          Notify Value : ${value}`);
+          this.setState({bpm: value})
+        }
+      });
+      break
+      case ppgSpO2:
+      this._ppgSpO2Subcription = characteristic.monitor((error, c) => {
+        if(error) this.setState({error: true, errorMsg: error.message})
+        if(c){
+          const value = getDecValue(c)
+          console.log(`---------------------------------------------------
+          Characteristic UUID : ${characteristic.uuid}
+          Notify Value : ${value}`);
+          this.setState({SpO2: value})
+        }
+      });
+      default:
+      break
     }
   }
 
@@ -193,7 +220,7 @@ class VitalScreen extends Component{
                 <Text style={{fontSize:20}}>{this.state.time}</Text>
               </View>
               <View style={{flex:1}}>
-                <Text style={{color: mainColor, fontSize:45, fontWeight:'bold'}}>{this.state.bpm}</Text>
+                <Text style={{color: mainColor, fontSize:40, fontWeight:'bold'}}>{this.state.bpm}</Text>
               </View>
             </View>
             <Divider style={{backgroundColor: disable, height: 1}}/>
@@ -248,7 +275,9 @@ class VitalScreen extends Component{
     device.cancelConnection();
     console.log(device.isConnected)
     this._subscription.remove();
-    this._heartRateSubcription.remove();
+    this._ppgRawSubcription.remove();
+    this._ppgHeartRateSubcription.remove();
+    this._ppgSpO2Subcription.remove();
   }
 }
 
