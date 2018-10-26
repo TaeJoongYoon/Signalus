@@ -1,4 +1,5 @@
 import {  StyleSheet, } from 'react-native';
+import { normalize } from '../constants/utils';
 import { WIDTH, HEIGHT, borderRadius } from '../constants/dimens';
 import { backgroundColor, mainColor, disable } from '../constants/color';
 
@@ -12,7 +13,7 @@ const styles = StyleSheet.create({
     paddingTop: 35,
     paddingLeft: 20,
     paddingBottom: 20,
-    fontSize: 16,
+    fontSize: normalize(16),
     fontWeight: 'bold',
   },
   contents: {

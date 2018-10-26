@@ -1,4 +1,5 @@
 import {  StyleSheet, } from 'react-native';
+import { normalize } from '../constants/utils';
 import { WIDTH, HEIGHT } from '../constants/dimens';
 import { backgroundColor, divider, mainColor } from '../constants/color';
 
@@ -14,11 +15,11 @@ const styles = StyleSheet.create({
   },
   text: {
     color: divider,
-    fontSize: 18,
+    fontSize: normalize(18),
   },
   highlightText: {
     color: mainColor,
-    fontSize: 18,
+    fontSize: normalize(18),
     fontWeight: 'bold',
   },
 });

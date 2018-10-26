@@ -1,4 +1,5 @@
 import {  StyleSheet, } from 'react-native';
+import { normalize } from '../constants/utils';
 import { WIDTH, HEIGHT, borderRadius } from '../constants/dimens';
 import { backgroundColor, divider, mainColor, disable, highlightColor } from '../constants/color';
 
@@ -20,18 +21,18 @@ const styles = StyleSheet.create({
   },
   sectionTitle:{
     color: divider,
-    fontSize: 18,
+    fontSize: normalize(18),
     fontWeight: 'bold',
     marginBottom: 10,
   },
   alertStatusOn:{
     color: mainColor,
-    fontSize: 15,
+    fontSize: normalize(15),
     fontWeight: 'bold'
   },
   alertStatusOff:{
     color: disable,
-    fontSize: 15,
+    fontSize: normalize(15),
     fontWeight: 'bold'
   },
   registerContact:{

@@ -4,6 +4,7 @@ import * as Progress from 'react-native-progress';
 import { HEIGHT } from '../constants/dimens';
 import { LabelNormal, LabelWarning, LabelEmergency } from '../constants/string';
 import { mainColor, divider } from '../constants/color';
+import { normalize } from '../constants/utils';
 
 class CustomHealthStatusBar extends Component {
   constructor(props){
@@ -31,12 +32,12 @@ class CustomHealthStatusBar extends Component {
 
     return(
       <View style={{flexDirection: 'row', alignItems:'center', height:HEIGHT * 0.11}}>
-        <View style={{flex:4, paddingRight: 20}}>
+        <View style={{flex:3.5, paddingRight: 20}}>
           <Text style={{marginBottom: 10, color: divider}}>{`${title}\t`} <Text style={{color: this.state.color}}>{this.state.status}</Text> </Text>
           <Progress.Bar color={this.state.color} width={null} progress={percent/100} />
         </View>
         <View style={{flex:1}}>
-          <Text style={{color: this.state.color, fontSize:28, fontWeight:'bold'}}>{percent}<Text style={{fontSize: 20}}>%</Text> </Text>
+          <Text style={{color: this.state.color, fontSize:normalize(24), fontWeight:'bold'}}>{percent}<Text style={{fontSize: normalize(12)}}>%</Text> </Text>
         </View>
       </View>
       );

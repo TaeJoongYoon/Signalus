@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getDecValue } from '../constants/utils';
 import update from 'react-addons-update';
+import _ from 'lodash';
 // Elements
 import {
   View, Text, Image, TouchableOpacity,
@@ -10,6 +11,7 @@ import { Card, Divider, Icon  } from 'react-native-elements';
 import CustomChart from '../components/CustomChart';
 import CustomHealthStatusBar from '../components/CustomHealthStatusBar';
 import styles from '../styles/VitalStyle';
+import { normalize } from '../constants/utils';
 // Actions
 import { ON_CALENDAR, NOT_CONNECTED } from '../reducers/nav/actionTypes';
 import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';
@@ -43,11 +45,11 @@ class VitalScreen extends Component{
     this.state = {
       data: [],
       time:'',
-      bpm:102,
+      bpm:999,
       bpmHigh:132,
       bpmLow:64,
-      SpO2:98,
-      stress:89,
+      SpO2:100,
+      stress:100,
       connected: false,
       error: false,
       errorMsg: '',
@@ -210,17 +212,16 @@ class VitalScreen extends Component{
           data={this.state.data}
         />
 
-
         {/* BPM CardView */}
         <View style={styles.card}>
           <Card containerStyle={styles.cardView}>
             <View style={styles.bpmStatus}>
               <View style={{flex:3}}>
                 <Text style={{marginBottom: 10, color: divider}}>{`${LabelNowBPM}\t`} <Text style={{color: mainColor}}>{"정상"}</Text> </Text>
-                <Text style={{fontSize:20}}>{this.state.time}</Text>
+                <Text style={{fontSize:normalize(20)}}>{this.state.time}</Text>
               </View>
               <View style={{flex:1}}>
-                <Text style={{color: mainColor, fontSize:40, fontWeight:'bold'}}>{this.state.bpm}</Text>
+                <Text style={{color: mainColor, fontSize:normalize(33), fontWeight:'bold'}}>{this.state.bpm}</Text>
               </View>
             </View>
             <Divider style={{backgroundColor: disable, height: 1}}/>
@@ -234,14 +235,14 @@ class VitalScreen extends Component{
                     name='arrow-upward'
                     color={divider}
                   />
-                  <Text style={{color: divider, fontSize:16, fontWeight:'bold'}}>{this.state.bpmHigh}</Text>
+                  <Text style={{color: divider, fontSize:normalize(13), fontWeight:'bold'}}>{this.state.bpmHigh}</Text>
                 </View>
                 <View style={{flexDirection:'row', alignItems:'center'}}>
                   <Icon
                     name='arrow-downward'
                     color={divider}
                   />
-                  <Text style={{color: divider, fontSize:16, fontWeight:'bold'}}>{this.state.bpmLow}</Text>
+                  <Text style={{color: divider, fontSize:normalize(13), fontWeight:'bold'}}>{this.state.bpmLow}</Text>
                 </View>
               </View>
             </View>

@@ -1,4 +1,5 @@
 import {  StyleSheet, } from 'react-native';
+import { normalize } from '../constants/utils';
 import { WIDTH, HEIGHT, borderRadius } from '../constants/dimens';
 import { backgroundColor, divider, mainColor, disable, highlightColor, placeholderText, device } from '../constants/color';
 
@@ -22,23 +23,23 @@ const styles = StyleSheet.create({
   },
   fromDevice:{
     color: device,
-    fontSize: 13,
+    fontSize: normalize(13),
     marginBottom: 10,
   },
   fromUser:{
     color: placeholderText,
-    fontSize: 13,
+    fontSize: normalize(13),
     marginBottom: 10,
   },
   titleStyle:{
     color: divider,
-    fontSize: 16,
+    fontSize: normalize(16),
     fontWeight: 'bold',
     marginBottom: 10,
   },
   dateStyle:{
     color: divider,
-    fontSize: 16,
+    fontSize: normalize(16),
   },
   divider:{
     backgroundColor: disable,

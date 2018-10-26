@@ -10,6 +10,7 @@ import CustomFilledButton from '../components/CustomFilledButton';
 import CustomBorderedButton from '../components/CustomBorderedButton';
 import styles from '../styles/SignInStyle';
 import { defaultMinLength } from '../constants/dimens';
+import { normalize } from '../constants/utils';
 // Actions
 import * as loginActions from '../reducers/auth/actions';
 import {
@@ -136,7 +137,7 @@ class SignInScreen extends Component{
           <TouchableOpacity 
             onPress={() => this._find()}>
             <Text
-              style={{textDecorationLine: 'underline', color: mainColor, fontSize: 15}}
+              style={{textDecorationLine: 'underline', color: mainColor, fontSize: normalize(15)}}
               pointerEvents='none'>
             {LabelFind}
             </Text>

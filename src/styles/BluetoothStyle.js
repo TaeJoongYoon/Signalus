@@ -1,5 +1,6 @@
 import {  StyleSheet, } from 'react-native';
 import { WIDTH, HEIGHT } from '../constants/dimens';
+import { normalize } from '../constants/utils';
 import { backgroundColor, mainColor, disable, divider, placeholderText } from '../constants/color';
 
 const styles = StyleSheet.create({
@@ -26,12 +27,12 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   textToggleOn:{
-    fontSize: 15,
+    fontSize: normalize(13),
     color: mainColor,
     fontWeight: 'bold',
   },
   textToggleOff:{
-    fontSize: 15,
+    fontSize: normalize(13),
     color: divider,
     fontWeight: 'bold',
   },
@@ -41,13 +42,13 @@ const styles = StyleSheet.create({
   },
   listTitle:{
     padding: 25,
-    fontSize: 15,
+    fontSize: normalize(15),
     color: divider,
     fontWeight: 'bold',
   },
   listTitleError:{
     padding: 25,
-    fontSize: 15,
+    fontSize: normalize(15),
     color: divider,
     fontWeight: 'bold',
     color: 'red',
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
   },
   deviceTitle:{
     margin: 20,
-    fontSize: 15,
+    fontSize: normalize(15),
     color: placeholderText,
   },
   divider:{

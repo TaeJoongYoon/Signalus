@@ -11,6 +11,7 @@ import {
 import { Divider } from 'react-native-elements';
 import styles from '../styles/BluetoothStyle';
 import CustomDevicesItem from '../components/CustomDevicesItem';
+import { normalize } from '../constants/utils';
 // Actions
 import * as connectActions from '../reducers/bluetooth/actions';
 import { CONNECTED } from '../reducers/nav/actionTypes'
@@ -169,7 +170,7 @@ class BluetoothScreen extends Component{
             <TouchableOpacity 
               onPress={goToMain}>
               <Text
-                style={{color: placeholderText, fontSize: 20, fontWeight: 'bold'}}
+                style={{color: placeholderText, fontSize: normalize(20), fontWeight: 'bold'}}
                 pointerEvents='none'>
               {LabelBluetoothNotConnect}
               </Text>
