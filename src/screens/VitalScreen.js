@@ -196,9 +196,9 @@ class VitalScreen extends Component{
   // LifeCyle
   componentDidMount(){
     const { navigation, device, isConnected } = this.props;
-    
-    this._timer = setInterval(this._startTime, 1000);
 
+    this._timer = setInterval(this._startTime, 1000);
+    
     navigation.setParams({ clickCalendar: this._goToCalendar });
     if(isConnected) this._connectToDevice(device);
   }
@@ -273,12 +273,13 @@ class VitalScreen extends Component{
     const { device } = this.props;
 
     clearInterval(this._timer);
-    device.cancelConnection();
-    console.log(device.isConnected)
-    this._subscription.remove();
-    this._ppgRawSubcription.remove();
-    this._ppgHeartRateSubcription.remove();
-    this._ppgSpO2Subcription.remove();
+    device.cancelConnection().then((device) => {
+      console.log(device)
+      this._subscription.remove();
+      this._ppgRawSubcription.remove();
+      this._ppgHeartRateSubcription.remove();
+      this._ppgSpO2Subcription.remove();
+    })
   }
 }
 
