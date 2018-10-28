@@ -45,7 +45,7 @@ class VitalScreen extends Component{
     this.state = {
       data: [],
       time:'',
-      bpm:999,
+      bpm:80,
       bpmHigh:132,
       bpmLow:64,
       SpO2:100,

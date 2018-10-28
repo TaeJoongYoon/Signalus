@@ -23,7 +23,7 @@ class CalendarScreen extends Component{
     super(props);
     this.state = {
       today: getToday(),
-      eventDay: ['2018-10-25', '2018-10-26'],
+      eventDay: ['2018-10-25', '2018-10-26', '2018-11-01', '2018-10-31'],
       selected: getToday(),
     };
   }

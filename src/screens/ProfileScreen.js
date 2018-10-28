@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import _ from "lodash";
 import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 // Elements
 import {
-  View, Text, Switch, TextInput, TouchableWithoutFeedback, Keyboard, AsyncStorage,
+  View, Text, Switch, TextInput, TouchableWithoutFeedback, Keyboard, AsyncStorage, Alert
 } from 'react-native';
 import { Divider, Icon } from 'react-native-elements'
+import Contacts from 'react-native-contacts';
 import CustomFAB from '../components/CustomFAB';
 import CustomFilledButton from '../components/CustomFilledButton';
 import styles from '../styles/ProfileStyle';
@@ -37,16 +39,49 @@ class ProfileScreen extends Component{
       password:'',
       token:'',
       isOn: true,
-      contact: "",
+      name: '',
     }
   }
 
   // Functions
-  _register = (id, phoneNumber, token) => {
+  _getContacts = async (id, token) => {
+    const { ContactActions } = this.props;
+    
+    return await ContactActions.getContacts(id, token);
+  }
+
+  _register = (id, name, token) => {
+    Contacts.getContactsMatchingString(name, (err, contacts) => {
+      if (err) throw err;
+    
+      this._phoneNumber = contacts
+      console.log(contact)
+    })
+
+    Alert.alert(
+      LabelRegisterContact,
+      `${name} - ${this._phoneNumber}가 맞습니까?`,
+      [
+        {text: "취소", onPress: () => console.log("취소"), style: 'cancel'},
+        {text: "확인", onPress: () => this._registerContact(id, name, this._phoneNumber, token)},
+      ],
+      { cancelable: false }
+    )
+  }
+
+  _registerContact = (id, name, phoneNumber, token) => {
     const { ContactActions } = this.props;
 
     try{
-      ContactActions.register(id, phoneNumber, token)
+      ContactActions.register(id, name, phoneNumber, token)
+    }catch(e){}
+  }
+
+  _delete = (phoneNumber) => {
+    const { ContactActions } = this.props;
+
+    try{
+      ContactActions.deleteContact(this.state.id, phoneNumber, this.state.token)
     }catch(e){}
   }
 
@@ -58,19 +93,26 @@ class ProfileScreen extends Component{
       token = value[2][1];
 
       this.setState({id: id, password: password, token: token})
+
+      this._getContacts(id, token)
+          .catch((e) =>{})
     })
   }
 
   componentWillReceiveProps(nextProps) {
-    const { device, isConnected, error, isRegisterd, isDeleted } = nextProps;
+    const { device, isConnected, error, isRegisterd, isDeleted, contacts } = nextProps;
     console.log(nextProps)
     if(isRegisterd){
-      console.log("성공")
+      console.log("등록 성공")
     }
+    if(isDeleted){
+      console.log("삭제 성공")
+    }
+    console.log(contacts)
   }
 
   render(){
-    const { setting } = this.props;
+    const { setting, contacts } = this.props;
     return(
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
@@ -103,13 +145,13 @@ class ProfileScreen extends Component{
             <TextInput
               style={styles.registerInput}
               placeholder={PlaceholderContact}
-              onChangeText={(contact) => this.setState({contact: contact})}
+              onChangeText={(name) => this.setState({name: name})}
             />  
             <CustomFilledButton
               style={styles.registerButton}
               title={LabelRegisterButton}
               disabled={false}
-              onPress={() => this._register(this.state.id, this.state.contact, this.state.token)}
+              onPress={() => this._register(this.state.id, this.state.name, this.state.token)}
             />
           </View>
         </View>
@@ -121,6 +163,11 @@ class ProfileScreen extends Component{
           <Text style={styles.sectionTitle}>
             {LabelPhoneListTitle}
           </Text>
+          {_.map(contacts, (contact) => {
+            return(
+              <Text>{contact}</Text>
+            );
+          })}
         </View>
 
         {/* Floating Action Button */}
@@ -149,6 +196,7 @@ export default connect(
     error: state.contact.error,
     isRegisterd: state.contact.isRegisterd,
     isDeleted: state.contact.isDeleted,
+    contacts: state.contact.contacts,
   }),
   (dispatch) => ({
       ContactActions: bindActionCreators(contactActions, dispatch),
