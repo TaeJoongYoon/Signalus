@@ -10,6 +10,7 @@ import { Divider, Icon } from 'react-native-elements'
 import Contacts from 'react-native-contacts';
 import CustomFAB from '../components/CustomFAB';
 import CustomFilledButton from '../components/CustomFilledButton';
+import CustomContactItem from '../components/CustomContactItem';
 import styles from '../styles/ProfileStyle';
 // Actions
 import * as contactActions from '../reducers/contact/actions';
@@ -51,22 +52,26 @@ class ProfileScreen extends Component{
   }
 
   _register = (id, name, token) => {
-    Contacts.getContactsMatchingString(name, (err, contacts) => {
-      if (err) throw err;
+    Contacts.getContactsMatchingString(name, (error, contacts) => {
+      if (error) throw error;
     
-      this._phoneNumber = contacts
-      console.log(contact)
+      if(contacts.length > 0){
+        this._name = contacts[0].familyName.length > 0 ? contacts[0].familyName : contacts[0].givenName
+        this._phoneNumber = contacts[0].phoneNumbers[0].number
+        
+        Alert.alert(
+          LabelRegisterContact,
+          `${this._name}    ${this._phoneNumber}가 맞습니까?`,
+          [
+            {text: "취소", onPress: () => console.log("취소"), style: 'cancel'},
+            {text: "확인", onPress: () => this._registerContact(id, this._name, this._phoneNumber, token)},
+          ],
+          { cancelable: false }
+        )
+      } else{
+        Alert.alert("해당 이름으로 등록된 번호가 없습니다!")
+      }
     })
-
-    Alert.alert(
-      LabelRegisterContact,
-      `${name} - ${this._phoneNumber}가 맞습니까?`,
-      [
-        {text: "취소", onPress: () => console.log("취소"), style: 'cancel'},
-        {text: "확인", onPress: () => this._registerContact(id, name, this._phoneNumber, token)},
-      ],
-      { cancelable: false }
-    )
   }
 
   _registerContact = (id, name, phoneNumber, token) => {
@@ -103,12 +108,15 @@ class ProfileScreen extends Component{
     const { device, isConnected, error, isRegisterd, isDeleted, contacts } = nextProps;
     console.log(nextProps)
     if(isRegisterd){
+      this._getContacts(this.state.id, this.state.token)
+          .catch((e) =>{})
       console.log("등록 성공")
     }
     if(isDeleted){
+      this._getContacts(this.state.id, this.state.token)
+          .catch((e) =>{})
       console.log("삭제 성공")
     }
-    console.log(contacts)
   }
 
   render(){
@@ -165,7 +173,12 @@ class ProfileScreen extends Component{
           </Text>
           {_.map(contacts, (contact) => {
             return(
-              <Text>{contact}</Text>
+              <CustomContactItem
+                key={contact.name}
+                name={contact.name}
+                phoneNumber={contact.phoneNumber}
+                onPress={()=>this._delete(contact.phoneNumber)}
+              />
             );
           })}
         </View>

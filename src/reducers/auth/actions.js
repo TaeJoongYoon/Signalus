@@ -15,7 +15,6 @@ export const register = (id, password, age, gender, height, weight) => dispatch 
 
   return registerAPI(id,password,age,gender,height,weight).then(
     (response) => {   // Success
-    console.log(response); // Don't forget remove it
     dispatch(success(response));
     saveData(id, password, response);
   }).catch((error) => {   // Failure
@@ -32,11 +31,9 @@ export const login = (id, password) => dispatch => {
 
   return loginAPI(id,password).then(
     (response) => {   // Success
-    console.log(response); // Don't forget remove it
     dispatch(success(response));
     saveData(id, password, response);
   }).catch((error) => {// Failure
-    console.log(error) // Don't forget remove it
     dispatch(failure(error))
   }) 
 }
@@ -50,10 +47,8 @@ export const withdraw = (id, token) => dispatch => {
 
   return withdrawAPI(id, token).then(
     (response) => {   // Success
-    console.log(response); // Don't forget remove it
     dispatch(success(response));
   }).catch((error) => {// Failure
-    console.log(error) // Don't forget remove it
     dispatch(failure(error))
   }) 
 }

@@ -14,10 +14,8 @@ export const register = (id, name, phoneNumber, token) => dispatch => {
 
   return registerAPI(id, name, phoneNumber, token).then(
     (response) => {   // Success
-    console.log(response); // Don't forget remove it
     dispatch(success(response));
   }).catch((error) => {   // Failure
-    console.log(error)
     dispatch(failure(error))
   }) 
 }
@@ -31,10 +29,8 @@ export const deleteContact = (id, phoneNumber, token) => dispatch => {
 
   return deleteAPI(id, phoneNumber, token).then(
     (response) => {   // Success
-    console.log(response); // Don't forget remove it
     dispatch(success(response));
   }).catch((error) => {   // Failure
-    console.log(error)
     dispatch(failure(error))
   }) 
 }
@@ -48,10 +44,8 @@ export const getContacts = (id, token) => dispatch => {
 
   return getContactsAPI(id, token).then(
     (response) => {   // Success
-    console.log(response); // Don't forget remove it
     dispatch(success(response));
   }).catch((error) => {   // Failure
-    console.log(error)
     dispatch(failure(error))
   }) 
 }

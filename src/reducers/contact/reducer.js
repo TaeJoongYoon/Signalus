@@ -42,6 +42,9 @@ export default contact = (state=initialState, action) => {
       const {contacts} = action.payload.data;
       return{
         ...state,
+        pending: false,
+        isRegisterd: false,
+        isDeleted: false,
         contacts: contacts
       };
 
