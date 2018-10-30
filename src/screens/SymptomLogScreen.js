@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
+import _ from "lodash";
+import { bindActionCreators } from "redux";
+import update from 'react-addons-update';
 import { connect } from 'react-redux';
-import { getToday } from '../constants/utils';
 // Elements
 import {
-  View, Text, TouchableOpacity
+  View, Text, TouchableOpacity, AsyncStorage,
 } from 'react-native';
 import { Divider } from 'react-native-elements'
 import CustomSymptomCheckBox from '../components/CustomSymptomCheckBox';
 import styles from '../styles/SymptomLogStyle';
 // Actions
-
+import * as symptomActions from '../reducers/symptom/actions';
+import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';
 // Strings
 import { 
   HeaderSymptomLog, LabelAddSymptom, LabelSelectSymptom,
@@ -18,6 +21,7 @@ import {
 } from '../constants/string';
 // Colors
 import { disable } from '../constants/color';
+import { getToday, getTimeForNow } from '../constants/utils';
 
 class SymptomLogScreen extends Component{
   static navigationOptions = ({ navigation }) => {
@@ -36,6 +40,9 @@ class SymptomLogScreen extends Component{
   constructor(props){
     super(props)
     this.state= {
+      id:'',
+      token:'',
+      symptoms:[],
       anxious: false,
       armNeckPain: false,
       chestPain: false,
@@ -49,14 +56,116 @@ class SymptomLogScreen extends Component{
   
   // Functions
   _addSymptom = () => {
-    console.log("DD");
+    const { SymptomActions } = this.props;
+
+    if(this.state.anxious){
+      this.setState({
+        symptoms: update(
+                  this.state.symptoms, 
+                  {
+                    $push: [LabelAnxious]
+                  }
+        )});
+    }
+    if(this.state.armNeckPain){
+      this.setState({
+        symptoms: update(
+                  this.state.symptoms, 
+                  {
+                    $push: [LabelArmNeckPain]
+                  }
+        )});
+    }
+    if(this.state.chestPain){
+      this.setState({
+        symptoms: update(
+                  this.state.symptoms, 
+                  {
+                    $push: [LabelChestPain]
+                  }
+        )});
+    }
+    if(this.state.dizziness){
+      this.setState({
+        symptoms: update(
+                  this.state.symptoms, 
+                  {
+                    $push: [LabelDizziness]
+                  }
+        )});
+    }
+    if(this.state.fainted){
+      this.setState({
+        symptoms: update(
+                  this.state.symptoms, 
+                  {
+                    $push: [LabelFainted]
+                  }
+        )});
+    }
+    if(this.state.fluttering){
+      this.setState({
+        symptoms: update(
+                  this.state.symptoms, 
+                  {
+                    $push: [LabelFluttering]
+                  }
+        )});
+    }
+    if(this.state.lightHeaded){
+      this.setState({
+        symptoms: update(
+                  this.state.symptoms, 
+                  {
+                    $push: [LabelLightHeaded]
+                  }
+        )});
+    }
+    if(this.state.vomiting){
+      this.setState({
+        symptoms: update(
+                  this.state.symptoms, 
+                  {
+                    $push: [LabelVomiting]
+                  }
+        )});
+    }
+
+    if(this.state.symptoms.length > 0){
+      try{
+        SymptomActions.add(this.state.id, this.state.symptoms, getTimeForNow(), "device", this.state.token)
+      }catch(e){}
+    }
+    else{
+      alert("증상을 최소 1개 이상 선택해주세요!")
+    }
   };
 
   // LifeCycle
   componentDidMount(){
     const { navigation } = this.props;
     
+    AsyncStorage.multiGet(['id', 'token']).then((value) => {    // Get Data From LocalStorage
+      id = value[0][1];
+      token = value[1][1];
+
+      this.setState({id: id, token: token})
+
+    })
+
     navigation.setParams({ addSymptom: this._addSymptom });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { navigation, device, isConnected, error, isRegisterd, } = nextProps;
+    console.log(nextProps)
+    if(isRegisterd){
+      navigation.pop();
+      alert("등록하였습니다!")
+    }
+    if(error){
+      alert("등록에 실패하였습니다..")
+    }
   }
 
   render(){
@@ -135,9 +244,13 @@ class SymptomLogScreen extends Component{
 
 export default connect(
   (state) => ({
-    
+    device: state.bluetooth.device,
+    isConnected: state.bluetooth.isConnected,
+    error: state.symptom.error,
+    isRegisterd: state.symptom.isRegisterd,
   }),
   (dispatch) => ({
-    
+    SymptomActions: bindActionCreators(symptomActions, dispatch),
+    disconnect: () => dispatch({ type: DISCONNECT_SUCCESS })
   })
 )(SymptomLogScreen);

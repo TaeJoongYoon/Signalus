@@ -14,7 +14,6 @@ import CustomContactItem from '../components/CustomContactItem';
 import styles from '../styles/ProfileStyle';
 // Actions
 import * as contactActions from '../reducers/contact/actions';
-import {} from '../reducers/contact/actionTypes';
 import { ON_SETTING } from '../reducers/nav/actionTypes'
 import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';
 // Strings

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { bindActionCreators } from "redux";
 // Elements
 import {
   View, ScrollView
@@ -10,6 +11,7 @@ import CustomSymptomItem from '../components/CustomSymptomItem';
 import CustomFAB from '../components/CustomFAB';
 import styles from '../styles/SymptomStyle';
 // Actions
+import * as symptomActions from '../reducers/symptom/actions';
 import { 
   ON_LOG, ON_DETAIL_DEVICE, ON_DETAIL_USER
  } from '../reducers/nav/actionTypes'
@@ -19,7 +21,6 @@ import {
  } from '../constants/string';
  // Colors
 import { mainColor } from '../constants/color';
-import { symptoms } from '../constants/utils'; 
 
 class SymptomScreen extends Component{
   static navigationOptions = {
@@ -29,9 +30,20 @@ class SymptomScreen extends Component{
 
   constructor(props){
     super(props)
+    this.state= {
+      id:'',
+      token:'',
+      symptoms:[],
+    }
   }
 
   // Functions
+  _getSymptoms = async (id, token) => {
+    const { SymptomActions } = this.props;
+    
+    return await SymptomActions.getSymptoms(id, token);
+  }
+
   _goToLog = () => {
     this.props.goToLog();
   }
@@ -46,13 +58,26 @@ class SymptomScreen extends Component{
 
 
   // LifeCyle
+  componentDidMount(){
+    const { navigation } = this.props;
+    
+    AsyncStorage.multiGet(['id', 'token']).then((value) => {    // Get Data From LocalStorage
+      id = value[0][1];
+      token = value[1][1];
+
+      this.setState({id: id, token: token})
+    })
+  }
+
   render(){
+    const { symptoms } = this.props;
     return(
       <View style={styles.container}>
 
         {/* Symptom List */}
         <ScrollView>
           {_.map(symptoms, symptom => {
+            _title = symptom.symptoms.length > 1 ? `${symptom.symptoms[0]} 외 ${symptom.symptoms.length-1}개` : `${symptom.symptoms[0]}`;
             return (
               <CustomSymptomItem
                 key={symptom.key}
@@ -61,9 +86,9 @@ class SymptomScreen extends Component{
                 typeStyle={symptom.type == "device" ? styles.fromDevice : styles.fromUser}
                 titleStyle={styles.titleStyle}
                 divider={styles.divider}
-                title={symptom.title}
+                title={_title}
                 dateStyle={styles.dateStyle}
-                date={symptom.date}
+                date={symptom.time.substring(0,10)}
                 onPress={() => symptom.type == "device" ? this._goToDetailDevice() : this._goToDetailUser()}
               />
             );
@@ -90,9 +115,10 @@ class SymptomScreen extends Component{
 
 export default connect(
   (state) => ({
-    
+    symptoms: state.symptom.symptoms,
   }),
   (dispatch) => ({
+    SymptomActions: bindActionCreators(symptomActions, dispatch),
     goToLog: () => dispatch({ type: ON_LOG}),
     goToDetailDevice: () => dispatch({ type: ON_DETAIL_DEVICE}),
     goToDetailUser: () => dispatch({ type: ON_DETAIL_USER}),
