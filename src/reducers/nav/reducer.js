@@ -4,7 +4,7 @@ import { RootNavigator } from '../../navigators/AppNavigator';
 import {
   NOT_SIGNED, ON_CONSENT, ON_REGISTER, SIGNED, SIGNOUT,
   CONNECTED, NOT_CONNECTED,
-  ON_CALENDAR, ON_LOG, LOGGED, ON_DETAIL_DEVICE, ON_DETAIL_USER, ON_SETTING
+  ON_CALENDAR, ON_LOG, LOGGED, ON_DETAIL_PATCH, ON_DETAIL_USER, ON_SETTING
 } from './actionTypes';
 
 // Start with two routes: The Main screen, with the Login screen on top.
@@ -84,9 +84,9 @@ export default nav = (state = initialNavState, action) => {
         state
       );
       break;
-    case ON_DETAIL_DEVICE:
+    case ON_DETAIL_PATCH:
       nextState = router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'SymptomDetailDevice'}),
+        NavigationActions.navigate({ routeName: 'SymptomDetailPatch'}),
         state
       );
       break;

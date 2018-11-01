@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { bindActionCreators } from "redux";
 // Elements
 import {
-  View, ScrollView
+  View, ScrollView, AsyncStorage
 } from 'react-native';
 import { Icon } from 'react-native-elements'
 import CustomSymptomItem from '../components/CustomSymptomItem';
@@ -13,7 +13,7 @@ import styles from '../styles/SymptomStyle';
 // Actions
 import * as symptomActions from '../reducers/symptom/actions';
 import { 
-  ON_LOG, ON_DETAIL_DEVICE, ON_DETAIL_USER
+  ON_LOG, ON_DETAIL_PATCH, ON_DETAIL_USER
  } from '../reducers/nav/actionTypes'
  // Strings
 import { 
@@ -48,8 +48,8 @@ class SymptomScreen extends Component{
     this.props.goToLog();
   }
 
-  _goToDetailDevice = () => {
-    this.props.goToDetailDevice();
+  _goToDetailPatch = () => {
+    this.props.goToDetailPatch();
   }
 
   _goToDetailUser = () => {
@@ -66,6 +66,8 @@ class SymptomScreen extends Component{
       token = value[1][1];
 
       this.setState({id: id, token: token})
+      this._getSymptoms(id,token)
+          .catch((e) =>{})
     })
   }
 
@@ -80,16 +82,16 @@ class SymptomScreen extends Component{
             _title = symptom.symptoms.length > 1 ? `${symptom.symptoms[0]} 외 ${symptom.symptoms.length-1}개` : `${symptom.symptoms[0]}`;
             return (
               <CustomSymptomItem
-                key={symptom.key}
+                key={symptom.time}
                 style={styles.itemView}
                 type={symptom.type}
-                typeStyle={symptom.type == "device" ? styles.fromDevice : styles.fromUser}
+                typeStyle={symptom.type == "patch" ? styles.fromPatch : styles.fromUser}
                 titleStyle={styles.titleStyle}
                 divider={styles.divider}
                 title={_title}
                 dateStyle={styles.dateStyle}
                 date={symptom.time.substring(0,10)}
-                onPress={() => symptom.type == "device" ? this._goToDetailDevice() : this._goToDetailUser()}
+                onPress={() => symptom.type === "patch" ? this._goToDetailPatch() : this._goToDetailUser()}
               />
             );
           })}
@@ -120,7 +122,7 @@ export default connect(
   (dispatch) => ({
     SymptomActions: bindActionCreators(symptomActions, dispatch),
     goToLog: () => dispatch({ type: ON_LOG}),
-    goToDetailDevice: () => dispatch({ type: ON_DETAIL_DEVICE}),
+    goToDetailPatch: () => dispatch({ type: ON_DETAIL_PATCH}),
     goToDetailUser: () => dispatch({ type: ON_DETAIL_USER}),
   })
 )(SymptomScreen);

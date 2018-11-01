@@ -1,7 +1,7 @@
 import {  StyleSheet, } from 'react-native';
 import { normalize } from '../constants/utils';
 import { WIDTH, HEIGHT, borderRadius } from '../constants/dimens';
-import { backgroundColor, divider, mainColor, disable, highlightColor, placeholderText, device } from '../constants/color';
+import { backgroundColor, divider, mainColor, disable, highlightColor, placeholderText, patch } from '../constants/color';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 15,
   },
-  fromDevice:{
-    color: device,
+  fromPatch:{
+    color: patch,
     fontSize: normalize(13),
     marginBottom: 10,
   },

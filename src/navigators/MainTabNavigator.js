@@ -6,7 +6,7 @@ import VitalScreen from '../screens/VitalScreen'; // Main-Vital
 import CalendarScreen from '../screens/CalendarScreen'; // Vital-Calendar
 import SymptomScreen from '../screens/SymptomScreen'; // Main-Symptom
 import SymptomLogScreen from '../screens/SymptomLogScreen'; // Symptom-Log
-import SymptomDetailDeviceScreen from '../screens/SymptomDetailDeviceScreen'; //Symptom-DetailFromDevice
+import SymptomDetailPatchScreen from '../screens/SymptomDetailPatchScreen'; //Symptom-DetailFromDevice
 import SymptomDetailUserScreen from '../screens/SymptomDetailUserScreen'; //Symptom-DetailFromUser
 import ProfileScreen from '../screens/ProfileScreen'; // Main-Profile
 import SettingScreen from '../screens/SettingScreen'; // Profile-Setting
@@ -44,7 +44,7 @@ VitalStack.navigationOptions = ({ navigation }) => {
 const SymptomStack = createStackNavigator({
   Symptom: SymptomScreen,
   SymptomLog: SymptomLogScreen,
-  SymptomDetailDevice: SymptomDetailDeviceScreen,
+  SymptomDetailPatch: SymptomDetailPatchScreen,
   SymptomDetailUser: SymptomDetailUserScreen,
 },{
   navigationOptions: {

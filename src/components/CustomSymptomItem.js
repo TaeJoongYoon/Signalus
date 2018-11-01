@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { Divider } from 'react-native-elements';
-import { LabelSymptomFromDevice, LabelSymptomFromUser } from '../constants/string';
+import { LabelSymptomFromPatch, LabelSymptomFromUser } from '../constants/string';
 
 class CustomSymptomItem extends Component {
   constructor(props){
@@ -17,7 +17,7 @@ class CustomSymptomItem extends Component {
           <View style={style}>
             <View>
               <Text style={typeStyle}>
-                  {type == "device" ? LabelSymptomFromDevice : LabelSymptomFromUser}
+                  {type == "patch" ? LabelSymptomFromPatch : LabelSymptomFromUser}
               </Text>
               <Text style={titleStyle}>
                 {title}

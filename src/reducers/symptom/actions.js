@@ -4,7 +4,7 @@ import {
   SYMPTOM_GET_PENDING, SYMPTOM_GET_SUCCESS, SYMPTOM_GET_FAILURE,
 } from './actionTypes';
 
-export const add = (id, symptoms, time, type, token) => dispatch => {
+export const addSymptom = (id, symptoms, time, type, token) => dispatch => {
   const pending = () => { return {type: SYMPTOM_ADD_PENDING}};
   const success = (response) => { return {type: SYMPTOM_ADD_SUCCESS, payload: response}};
   const failure = (error) => { return {type: SYMPTOM_ADD_FAILURE, payload: error}};
@@ -13,8 +13,10 @@ export const add = (id, symptoms, time, type, token) => dispatch => {
 
   return addSymptomAPI(id, symptoms, time, type, token).then(
     (response) => {   // Success
+    console.log(response)
     dispatch(success(response));
   }).catch((error) => {   // Failure
+    console.log(error)
     dispatch(failure(error))
   }) 
 }
@@ -28,8 +30,10 @@ export const getSymptoms = (id, token) => dispatch => {
 
   return getSymptomAPI(id, token).then(
     (response) => {   // Success
+      console.log(response)
     dispatch(success(response));
   }).catch((error) => {   // Failure
+    console.log(error)
     dispatch(failure(error))
   }) 
 }

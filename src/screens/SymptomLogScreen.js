@@ -42,7 +42,6 @@ class SymptomLogScreen extends Component{
     this.state= {
       id:'',
       token:'',
-      symptoms:[],
       anxious: false,
       armNeckPain: false,
       chestPain: false,
@@ -58,82 +57,43 @@ class SymptomLogScreen extends Component{
   _addSymptom = () => {
     const { SymptomActions } = this.props;
 
+    let symptoms = []
+
     if(this.state.anxious){
-      this.setState({
-        symptoms: update(
-                  this.state.symptoms, 
-                  {
-                    $push: [LabelAnxious]
-                  }
-        )});
-    }
-    if(this.state.armNeckPain){
-      this.setState({
-        symptoms: update(
-                  this.state.symptoms, 
-                  {
-                    $push: [LabelArmNeckPain]
-                  }
-        )});
-    }
-    if(this.state.chestPain){
-      this.setState({
-        symptoms: update(
-                  this.state.symptoms, 
-                  {
-                    $push: [LabelChestPain]
-                  }
-        )});
-    }
-    if(this.state.dizziness){
-      this.setState({
-        symptoms: update(
-                  this.state.symptoms, 
-                  {
-                    $push: [LabelDizziness]
-                  }
-        )});
-    }
-    if(this.state.fainted){
-      this.setState({
-        symptoms: update(
-                  this.state.symptoms, 
-                  {
-                    $push: [LabelFainted]
-                  }
-        )});
-    }
-    if(this.state.fluttering){
-      this.setState({
-        symptoms: update(
-                  this.state.symptoms, 
-                  {
-                    $push: [LabelFluttering]
-                  }
-        )});
-    }
-    if(this.state.lightHeaded){
-      this.setState({
-        symptoms: update(
-                  this.state.symptoms, 
-                  {
-                    $push: [LabelLightHeaded]
-                  }
-        )});
-    }
-    if(this.state.vomiting){
-      this.setState({
-        symptoms: update(
-                  this.state.symptoms, 
-                  {
-                    $push: [LabelVomiting]
-                  }
-        )});
+      symptoms.push(LabelAnxious)
     }
 
-    if(this.state.symptoms.length > 0){
+    if(this.state.armNeckPain){
+      symptoms.push(LabelArmNeckPain)
+    }
+
+    if(this.state.chestPain){
+      symptoms.push(LabelChestPain)
+    }
+
+    if(this.state.dizziness){
+      symptoms.push(LabelDizziness)
+    }
+
+    if(this.state.fainted){
+      symptoms.push(LabelFainted)
+    }
+
+    if(this.state.fluttering){
+      symptoms.push(LabelFluttering)
+    }
+
+    if(this.state.lightHeaded){
+      symptoms.push(LabelLightHeaded)
+    }
+
+    if(this.state.vomiting){
+      symptoms.push(LabelVomiting)
+    }
+
+    if(symptoms.length > 0){
       try{
-        SymptomActions.add(this.state.id, this.state.symptoms, getTimeForNow(), "device", this.state.token)
+        SymptomActions.addSymptom(this.state.id, symptoms, getTimeForNow(), "device", this.state.token)
       }catch(e){}
     }
     else{
@@ -141,16 +101,22 @@ class SymptomLogScreen extends Component{
     }
   };
 
+  _getSymptoms = async (id, token) => {
+    const { SymptomActions } = this.props;
+    
+    return await SymptomActions.getSymptoms(id, token);
+  }
+
   // LifeCycle
   componentDidMount(){
     const { navigation } = this.props;
+    console.log(this.props)
     
     AsyncStorage.multiGet(['id', 'token']).then((value) => {    // Get Data From LocalStorage
       id = value[0][1];
       token = value[1][1];
 
       this.setState({id: id, token: token})
-
     })
 
     navigation.setParams({ addSymptom: this._addSymptom });
@@ -158,8 +124,9 @@ class SymptomLogScreen extends Component{
 
   componentWillReceiveProps(nextProps) {
     const { navigation, device, isConnected, error, isRegisterd, } = nextProps;
-    console.log(nextProps)
     if(isRegisterd){
+      this._getSymptoms(this.state.id,this.state.token)
+          .catch((e) =>{})
       navigation.pop();
       alert("등록하였습니다!")
     }

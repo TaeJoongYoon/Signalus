@@ -105,16 +105,13 @@ class ProfileScreen extends Component{
 
   componentWillReceiveProps(nextProps) {
     const { device, isConnected, error, isRegisterd, isDeleted, contacts } = nextProps;
-    console.log(nextProps)
     if(isRegisterd){
       this._getContacts(this.state.id, this.state.token)
           .catch((e) =>{})
-      console.log("등록 성공")
     }
     if(isDeleted){
       this._getContacts(this.state.id, this.state.token)
           .catch((e) =>{})
-      console.log("삭제 성공")
     }
   }
 
@@ -152,6 +149,7 @@ class ProfileScreen extends Component{
             <TextInput
               style={styles.registerInput}
               placeholder={PlaceholderContact}
+              autoCorrect={false}
               onChangeText={(name) => this.setState({name: name})}
             />  
             <CustomFilledButton
