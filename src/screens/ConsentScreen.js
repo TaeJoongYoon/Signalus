@@ -10,11 +10,12 @@ import CustomFilledButton from '../components/CustomFilledButton';
 import styles from '../styles/ConsentStyle';
 // Actions
 import { 
-  ON_REGISTER
+  ON_REGISTER, ON_CONSENT_HTML
  } from '../reducers/nav/actionTypes'
 // Strings
 import {
-  HeaderConsent, LabelConsent1, LabelConsent2, LabelConsent3, LabelConsent4, LabelAgreementAll, LabelAgreement
+  HeaderConsent, LabelConsentTerms, LabelConsentPrivate, LabelConsentTermsofGeo, LabelConsentMarketing,
+  LabelAgreementAll, LabelAgreement
 } from '../constants/string';
 
 class ConsentScreen extends Component{
@@ -34,18 +35,10 @@ class ConsentScreen extends Component{
   }
 
   // Functions
-  _onTouch =(item) => {
-    console.log(item)
-    switch(item){
-      case "ONE":
-      break
-      case "TWO":
-      break
-      case "THREE":
-      break
-      case "FOUR":
-      break
-    }
+  _viewHTML =(item) => {
+    this.props.navigation.navigate('ConsentHTML', {
+      item: item,
+    })
   }
 
   // LifeCyle
@@ -70,8 +63,8 @@ class ConsentScreen extends Component{
         <CustomCheckBox
           checked={this.state.checked_1}
           onPress={() => this.setState({checked_1: !this.state.checked_1})}
-          onTouch={() => this._onTouch("ONE")}
-          title={LabelConsent1}
+          onTouch={() => this._viewHTML("Terms")}
+          title={LabelConsentTerms}
           underline={true}
         />
 
@@ -79,8 +72,8 @@ class ConsentScreen extends Component{
         <CustomCheckBox
           checked={this.state.checked_2}
           onPress={() => this.setState({checked_2: !this.state.checked_2})}
-          onTouch={() => this._onTouch("TWO")}
-          title={LabelConsent2}
+          onTouch={() => this._viewHTML("Private")}
+          title={LabelConsentPrivate}
           underline={true}
         />
 
@@ -88,8 +81,8 @@ class ConsentScreen extends Component{
         <CustomCheckBox
           checked={this.state.checked_3}
           onPress={() => this.setState({checked_3: !this.state.checked_3})}
-          onTouch={() => this._onTouch("THREE")}
-          title={LabelConsent3}
+          onTouch={() => this._viewHTML("TermsofGeo")}
+          title={LabelConsentTermsofGeo}
           underline={true}
         />
 
@@ -97,8 +90,8 @@ class ConsentScreen extends Component{
         <CustomCheckBox
           checked={this.state.checked_4}
           onPress={() => this.setState({checked_4: !this.state.checked_4})}
-          onTouch={() => this._onTouch("FOUR")}
-          title={LabelConsent4}
+          onTouch={() => this._viewHTML("Marketing")}
+          title={LabelConsentMarketing}
           underline={true}
         />
 
@@ -122,6 +115,7 @@ export default connect(
 
   }),
   (dispatch) => ({
-    goToRegister: () => dispatch({ type: ON_REGISTER}),
+    goToRegister: () => dispatch({ type: ON_REGISTER }),
+    goToHTML: () => dispatch({ type: ON_CONSENT_HTML }),
   })
 )(ConsentScreen);

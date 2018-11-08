@@ -30,7 +30,7 @@ export default nav = (state = initialNavState, action) => {
         NavigationActions.navigate({ routeName: 'Consent' }),
         state
       );
-      break;
+      break; 
     case ON_REGISTER:
       nextState = router.getStateForAction(
         NavigationActions.navigate({ routeName: 'Register' }),
