@@ -40,10 +40,8 @@ Also, you can check your heart status easily.
 | react-native                   | 0.56.0      |
 | react-native-ble-plx           | 0.10.0      |
 | react-native-calendars         | 1.21.0      |
+| react-native-contacts          | 2.2.4       |
 | react-native-elements          | 1.0.0-beta5 |
-| react-native-fab               | 1.0.7       |
-| react-native-linear-gradient   | 2.4.2       |
-| react-native-progress          | 3.5.0       |
 | react-native-fab               | 1.0.7       |
 | react-native-linear-gradient   | 2.4.2       |
 | react-native-progress          | 3.5.0       |
