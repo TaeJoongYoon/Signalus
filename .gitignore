@@ -56,4 +56,6 @@ buck-out/
 *.jsbundle
 
 # private
-/src/constants
+/src/constants/URL.js
+/src/constants/html.js
+*.html
