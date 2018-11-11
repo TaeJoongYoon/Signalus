@@ -45,6 +45,7 @@ Also, you can check your heart status easily.
 | react-native-fab               | 1.0.7       |
 | react-native-linear-gradient   | 2.4.2       |
 | react-native-progress          | 3.5.0       |
+| react-native-sms               | 1.8.0       |
 | react-native-svg               | 6.5.2       |
 | react-native-svg-charts        | 5.2.0       |
 | react-native-vector-icons      | 5.0.0       |
