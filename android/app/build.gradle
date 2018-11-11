@@ -137,6 +137,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-notifications')
+    compile project(':react-native-sms')
     compile project(':react-native-contacts')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-ble-plx')

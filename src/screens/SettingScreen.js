@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 // Elements
 import {
-  View, AsyncStorage
+  View, AsyncStorage, PushNotificationIOS
 } from 'react-native';
 import { Divider } from 'react-native-elements'
 import CustomSimpleTouchableText from '../components/CustomSimpleTouchableText';
@@ -97,6 +97,12 @@ class Settingscreen extends Component{
 
       this.setState({id: id, password: password, token: token})
     })
+
+    PushNotificationIOS.checkPermissions((currentPermissions) => {
+      console.log('Badges enabled: ' + !!currentPermissions.badge);
+      console.log('Sounds enabled: ' + !!currentPermissions.sound);
+      console.log('Alerts enabled: ' + !!currentPermissions.alert);
+    });
   }
 
   componentWillReceiveProps(nextProps) {

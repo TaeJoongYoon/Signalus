@@ -5,7 +5,7 @@ import update from 'react-addons-update';
 import _ from 'lodash';
 // Elements
 import {
-  View, Text, Image, TouchableOpacity,
+  View, Text, Image, TouchableOpacity, PushNotificationIOS
 } from 'react-native';
 import { Card, Divider, Icon  } from 'react-native-elements';
 import CustomChart from '../components/CustomChart';
@@ -54,6 +54,8 @@ class VitalScreen extends Component{
       error: false,
       errorMsg: '',
     };
+
+    PushNotificationIOS.requestPermissions();
   }
 
   // Functions

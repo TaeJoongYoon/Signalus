@@ -12,7 +12,7 @@ const customizedPromiseMiddleware = promiseMiddleware({
 });
 const store = createStore(reducers, applyMiddleware(middleware,ReduxThunk));
 
-export default class App extends Component {
+export default class App extends Component {  
   render() {
     return (
       <Provider store={store}>

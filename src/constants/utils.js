@@ -1,5 +1,6 @@
 import { Buffer } from 'buffer';
-import { Dimensions, Platform, PixelRatio } from 'react-native';
+import { Dimensions, Platform, PixelRatio, PushNotificationIOS } from 'react-native';
+import SendSMS from 'react-native-sms'
 
 const {
   width: SCREEN_WIDTH,
@@ -76,4 +77,22 @@ export const getTimeForNow = () => {
 _checkTime = (i) => {
     if (i < 10) {i = "0" + i};
     return i;
+}
+
+_send = (message, contacts) => {
+ 
+  SendSMS.send({
+      body: message,
+      recipients: contacts,
+  }, (completed, cancelled, error) => {
+
+      console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
+
+  });
+}
+
+_localNotification = (content) => {
+  PushNotificationIOS.presentLocalNotification({
+    alertBody: content,
+  });
 }
