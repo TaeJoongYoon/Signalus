@@ -5,7 +5,7 @@ import update from 'react-addons-update';
 import _ from 'lodash';
 // Elements
 import {
-  View, Text, Image, TouchableOpacity, PushNotificationIOS
+  View, Text, Image, TouchableOpacity, PushNotificationIOS, AsyncStorage
 } from 'react-native';
 import { Card, Divider, Icon  } from 'react-native-elements';
 import CustomChart from '../components/CustomChart';
@@ -158,6 +158,7 @@ class VitalScreen extends Component{
           Characteristic UUID : ${characteristic.uuid}
           Notify Value : ${value}`);
           this.setState({bpm: value})
+
         }
       });
       break
@@ -170,6 +171,15 @@ class VitalScreen extends Component{
           Characteristic UUID : ${characteristic.uuid}
           Notify Value : ${value}`);
           this.setState({SpO2: value})
+          
+          if(value > bpmHigh){ // Set BPM High
+            this.setState({bpmHigh: value})
+          }
+
+          if(value < bpmLow){ // Set BPM Low
+            this.setState({bpmLow: value})
+          }
+
         }
       });
       default:
@@ -198,6 +208,13 @@ class VitalScreen extends Component{
   // LifeCyle
   componentDidMount(){
     const { navigation, device, isConnected } = this.props;
+
+    AsyncStorage.multiGet(['bpmHigh', 'bpmLow']).then((value) => {   // Check LocalStorage
+      bpmHigh =  value[0][1];
+      bpmLow =  value[1][1];
+
+      this.setState({bpmHigh: bpmHigh, bpmLow:bpmLow});
+    })
 
     this._timer = setInterval(this._startTime, 1000);
     
@@ -273,6 +290,11 @@ class VitalScreen extends Component{
 
   componentWillUnmount(){
     const { device } = this.props;
+
+    AsyncStorage.multiSet([
+      ["bpmHigh", this.state.bpmHigh],
+      ["bpmLow", this.state.bpmLow],
+    ])
 
     clearInterval(this._timer);
     device.cancelConnection().then((device) => {
