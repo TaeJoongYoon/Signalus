@@ -79,7 +79,7 @@ _checkTime = (i) => {
     return i;
 }
 
-_send = (message, contacts) => {
+export const send = (message, contacts) => {
  
   SendSMS.send({
       body: message,
@@ -87,11 +87,10 @@ _send = (message, contacts) => {
   }, (completed, cancelled, error) => {
 
       console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
-
   });
 }
 
-_localNotification = (content) => {
+export const localNotification = (content) => {
   PushNotificationIOS.presentLocalNotification({
     alertBody: content,
   });

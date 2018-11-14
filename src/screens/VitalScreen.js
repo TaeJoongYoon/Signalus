@@ -46,8 +46,8 @@ class VitalScreen extends Component{
       data: [],
       time:'',
       bpm:80,
-      bpmHigh:132,
-      bpmLow:64,
+      bpmHigh:120,
+      bpmLow:80,
       SpO2:100,
       stress:100,
       connected: false,
@@ -213,7 +213,12 @@ class VitalScreen extends Component{
       bpmHigh =  value[0][1];
       bpmLow =  value[1][1];
 
-      this.setState({bpmHigh: bpmHigh, bpmLow:bpmLow});
+      if(bpmHigh != null){
+        this.setState({bpmHigh: bpmHigh});
+      }
+      if(bpmLow != null){
+        this.setState({bpmLow:bpmLow});
+      }
     })
 
     this._timer = setInterval(this._startTime, 1000);

@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { bindActionCreators } from "redux";
 // Elements
 import {
-  View, ScrollView, AsyncStorage
+  View, ScrollView, AsyncStorage, RefreshControl,
 } from 'react-native';
 import { Icon } from 'react-native-elements'
 import CustomSymptomItem from '../components/CustomSymptomItem';
@@ -34,10 +34,18 @@ class SymptomScreen extends Component{
       id:'',
       token:'',
       symptoms:[],
+      refreshing: false,
     }
   }
 
   // Functions
+  _onRefresh = () => {
+    this.setState({refreshing: true});
+    this._getSymptoms(this.state.id, this.state.token)
+        .then(this.setState({refreshing: false}))
+        .catch((e) => {});
+  }
+
   _getSymptoms = async (id, token) => {
     const { SymptomActions } = this.props;
     
@@ -77,7 +85,14 @@ class SymptomScreen extends Component{
       <View style={styles.container}>
 
         {/* Symptom List */}
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
+        >
           {_.map(symptoms, symptom => {
             _title = symptom.symptoms.length > 1 ? `${symptom.symptoms[0]} 외 ${symptom.symptoms.length-1}개` : `${symptom.symptoms[0]}`;
             return (
@@ -95,6 +110,7 @@ class SymptomScreen extends Component{
               />
             );
           })}
+          
         </ScrollView>
 
         {/* Floating Action Button */}
