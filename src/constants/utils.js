@@ -90,8 +90,10 @@ export const send = (message, contacts) => {
   });
 }
 
-export const localNotification = (content) => {
-  PushNotificationIOS.presentLocalNotification({
-    alertBody: content,
+export const notification = () => {
+  PushNotificationIOS.scheduleLocalNotification({ 
+    fireDate: new Date(Date.now() + 60 * 1000).getTime(), 
+    alertTitle: '위험상황 감지!',
+    alertBody: '부정맥으로 의심되는 신호가 감지되었습니다!'
   });
 }

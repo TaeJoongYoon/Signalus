@@ -11,7 +11,7 @@ import { Card, Divider, Icon  } from 'react-native-elements';
 import CustomChart from '../components/CustomChart';
 import CustomHealthStatusBar from '../components/CustomHealthStatusBar';
 import styles from '../styles/VitalStyle';
-import { normalize } from '../constants/utils';
+import { notification, normalize } from '../constants/utils';
 // Actions
 import { ON_CALENDAR, NOT_CONNECTED } from '../reducers/nav/actionTypes';
 import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';

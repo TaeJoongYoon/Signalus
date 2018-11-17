@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { bindActionCreators } from "redux";
 // Elements
 import {
-  View, ScrollView, AsyncStorage, RefreshControl,
+  View, ScrollView, AsyncStorage, RefreshControl, PushNotificationIOS
 } from 'react-native';
 import { Icon } from 'react-native-elements'
 import CustomSymptomItem from '../components/CustomSymptomItem';
@@ -56,12 +56,15 @@ class SymptomScreen extends Component{
     this.props.goToLog();
   }
 
-  _goToDetailPatch = () => {
+  _goToDetailPatch = (symptom) => {
     this.props.goToDetailPatch();
   }
 
-  _goToDetailUser = () => {
-    this.props.goToDetailUser();
+  _goToDetailUser = (symptom) => {
+    this.props.navigation.navigate('SymptomDetailUser', {
+      time: symptom.time,
+      symptoms: symptom.symptoms,
+    });
   }
 
 
@@ -77,6 +80,12 @@ class SymptomScreen extends Component{
       this._getSymptoms(id,token)
           .catch((e) =>{})
     })
+
+    PushNotificationIOS.scheduleLocalNotification({ 
+      fireDate: new Date(Date.now() + 60 * 1000).getTime(), 
+      alertTitle: '위험상황 감지!',
+      alertBody: '부정맥으로 의심되는 신호가 감지되었습니다!'
+    });
   }
 
   render(){
@@ -106,7 +115,7 @@ class SymptomScreen extends Component{
                 title={_title}
                 dateStyle={styles.dateStyle}
                 date={symptom.time.substring(0,10)}
-                onPress={() => symptom.type === "patch" ? this._goToDetailPatch() : this._goToDetailUser()}
+                onPress={() => symptom.type === "patch" ? this._goToDetailPatch(symptom) : this._goToDetailUser(symptom)}
               />
             );
           })}

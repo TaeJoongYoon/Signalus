@@ -8,7 +8,6 @@ import {
 import { Divider } from 'react-native-elements'
 import CustomSimpleTouchableText from '../components/CustomSimpleTouchableText';
 import styles from '../styles/SettingStyle';
-import { localNotification } from '../constants/utils';
 // Actions
 import * as withdrawActions from '../reducers/auth/actions';
 import { SIGNOUT } from '../reducers/nav/actionTypes'
