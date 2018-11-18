@@ -12,7 +12,7 @@ const initialState = {
 
 export default bluetooth = (state=initialState, action) => {
   switch(action.type){
-    
+
     case CONNECT_PENDING:
       return {
         ...state,

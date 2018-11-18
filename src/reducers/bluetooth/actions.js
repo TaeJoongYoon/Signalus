@@ -15,6 +15,7 @@ export const connect = (device) => dispatch => {
   saveData(device)
 }
 
+
 const saveData = (device) => {
   AsyncStorage.multiSet([
     ["device", device],

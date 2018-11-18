@@ -74,6 +74,23 @@ export const getTimeForNow = () => {
   return now
 }
 
+export const getTimeForNowPath = (t) => {
+  let time = t
+  
+  const year = time.substring(0,4)
+  const month = time.substring(5,7)
+  const day = time.substring(8,10)
+
+  time = time.substring(11)
+
+  const hour = time.substring(0,2)
+  const minute = time.substring(3,5)
+  const second = time.substring(6,8)
+
+  const now = `${year}.${month}.${day}_${hour}:${minute}:${second}`
+  return now
+}
+
 _checkTime = (i) => {
     if (i < 10) {i = "0" + i};
     return i;
@@ -96,4 +113,21 @@ export const notification = () => {
     alertTitle: '위험상황 감지!',
     alertBody: '부정맥으로 의심되는 신호가 감지되었습니다!'
   });
+}
+
+export const signalToString = (data) => {
+  let signalString = ''
+  for(i in data){
+    signalString += `${data[i]}\n`
+  }
+
+  return signalString
+}
+
+export const stringToSignal = (data) => {
+  var signal = data.split('\n').map((item) => {
+    return parseInt(item, 10);
+  });
+
+  return signal.slice(0,-1)
 }

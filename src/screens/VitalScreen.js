@@ -1,24 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getDecValue } from '../constants/utils';
 import update from 'react-addons-update';
 import _ from 'lodash';
+import { bindActionCreators } from "redux";
 // Elements
 import {
   View, Text, Image, TouchableOpacity, PushNotificationIOS, AsyncStorage
 } from 'react-native';
 import { Card, Divider, Icon  } from 'react-native-elements';
+import  RNFS from 'react-native-fs';
 import CustomChart from '../components/CustomChart';
 import CustomHealthStatusBar from '../components/CustomHealthStatusBar';
 import styles from '../styles/VitalStyle';
-import { notification, normalize } from '../constants/utils';
+import { getDecValue, notification, normalize, signalToString, getTimeForNow, getTimeForNowPath, stringToSignal } from '../constants/utils';
 // Actions
+import * as symptomActions from '../reducers/symptom/actions';
 import { ON_CALENDAR, NOT_CONNECTED } from '../reducers/nav/actionTypes';
 import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';
 // String
 import { 
   HeaderVital,
-  ppgRawUUID, ppgHeartRate, ppgSpO2,
+  ecgRawUUID, ppgHeartRate, ppgSpO2,
   LabelNowBPM, LabelBPMHighLow, LabelSpO2, LabelStress,
  } from '../constants/string';
  // Colors
@@ -117,8 +119,10 @@ class VitalScreen extends Component{
   }
 
   _notifyCharacteristc = (characteristic) => {
+    const { BluetoothActions } = this.props;
+
     switch(characteristic.uuid){
-      case ppgRawUUID:
+      case ecgRawUUID:
       this._ppgRawSubcription = characteristic.monitor((error, c) => {
         if(error) this.setState({error: true, errorMsg: error.message})
         if(c){
@@ -146,6 +150,10 @@ class VitalScreen extends Component{
                         }
               )});
           }
+
+          try{
+            BluetoothActions.signal(this.state.data)
+          }catch(e){console.log(e)}
         }
       });
       break
@@ -205,14 +213,48 @@ class VitalScreen extends Component{
       return i;
   }
 
+  _add = () => {
+    const path = RNFS.DocumentDirectoryPath + '/signal.txt';
+   
+    RNFS.writeFile(path, signalToString(data), 'utf8')
+    .then((success) => {
+      console.log('FILE WRITTEN!');
+      
+
+      this._addsignal(this.state.id, path, getTimeForNow(), this.state.token)
+          .catch((e) =>{})
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+  }
+
+  _addsignal = async (id, signalFile, time, token) => {
+    const { SymptomActions } = this.props;
+    
+    return await SymptomActions.addSignal(id, signalFile, time, token);
+  }
+
+  _getsignal = async (id, time, token) => {
+    const { SymptomActions } = this.props;
+    
+    return await SymptomActions.getSignal(id, time, token);
+  }
+
   // LifeCyle
   componentDidMount(){
     const { navigation, device, isConnected } = this.props;
 
-    AsyncStorage.multiGet(['bpmHigh', 'bpmLow']).then((value) => {   // Check LocalStorage
-      bpmHigh =  value[0][1];
-      bpmLow =  value[1][1];
+    AsyncStorage.multiGet(['id', 'token', 'bpmHigh', 'bpmLow']).then((value) => {   // Check LocalStorage
+      id = value[0][1];
+      token = value[1][1];
+      bpmHigh =  value[2][1];
+      bpmLow =  value[3][1];
 
+      this._getsignal(id, getTimeForNowPath('2018.11.18_20:32:17'), token)
+          .catch((e) =>{})
+
+      this.setState({id: id, token: token})
       if(bpmHigh != null){
         this.setState({bpmHigh: bpmHigh});
       }
@@ -225,6 +267,10 @@ class VitalScreen extends Component{
     
     navigation.setParams({ clickCalendar: this._goToCalendar });
     if(isConnected) this._connectToDevice(device);
+  }
+
+  componentWillReceiveProps(nextProps){
+    console.log(stringToSignal(nextProps.signal))
   }
 
   render(){
@@ -315,10 +361,13 @@ class VitalScreen extends Component{
 
 export default connect(
   (state) => ({
+    signal: state.symptom.signal,
     device : state.bluetooth.device,
     isConnected: state.bluetooth.isConnected,
+    
   }),
   (dispatch) => ({
+    SymptomActions: bindActionCreators(symptomActions, dispatch),
     goToCalendar: () => dispatch({ type: ON_CALENDAR}),
     disconnect: () => dispatch({ type: DISCONNECT_SUCCESS }),
     goToBluetooth: () => dispatch({ type: NOT_CONNECTED})

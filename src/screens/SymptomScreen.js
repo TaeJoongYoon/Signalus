@@ -89,7 +89,7 @@ class SymptomScreen extends Component{
   }
 
   render(){
-    const { symptoms } = this.props;
+    const { isConnected, symptoms } = this.props;
     return(
       <View style={styles.container}>
 
@@ -123,18 +123,19 @@ class SymptomScreen extends Component{
         </ScrollView>
 
         {/* Floating Action Button */}
-        <CustomFAB
-          buttonColor={mainColor}
-          iconTextColor={'white'}
-          onClickAction={() => this._goToLog()}
-          visible={true}
-          iconTextComponent={
-            <Icon
-              name='add'
-              color='white'
-            />
-          }
-        />
+        {isConnected ?
+          <CustomFAB
+            buttonColor={mainColor}
+            iconTextColor={'white'}
+            onClickAction={() => this._goToLog()}
+            visible={true}
+            iconTextComponent={
+              <Icon
+                name='add'
+                color='white'
+              />
+            }
+          /> : null}
       </View>
     );
   }
@@ -142,6 +143,7 @@ class SymptomScreen extends Component{
 
 export default connect(
   (state) => ({
+    isConnected: state.bluetooth.isConnected,
     symptoms: state.symptom.symptoms,
   }),
   (dispatch) => ({

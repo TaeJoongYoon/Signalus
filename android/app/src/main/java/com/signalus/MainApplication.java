@@ -3,6 +3,7 @@ package com.signalus;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rnfs.RNFSPackage;
 import com.wix.reactnativenotifications.RNNotificationsPackage;
 import com.tkporter.sendsms.SendSMSPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
@@ -30,6 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFSPackage(),
             new RNNotificationsPackage(),
             SendSMSPackage.getInstance(),
             new ReactNativeContacts(),

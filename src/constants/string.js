@@ -1,6 +1,6 @@
 // Bluetooth
 export const targetDeviceName = "24Patch";
-export const ppgRawUUID = "00002a37-0000-1000-8000-00805f9b34fb";
+export const ecgRawUUID = "00002a37-0000-1000-8000-00805f9b34fb";
 export const ppgHeartRate = "00002a19-0000-1000-8000-00805f9b34fb";
 export const ppgSpO2 = "00002a38-0000-1000-8000-00805f9b34fb";
 // Header
