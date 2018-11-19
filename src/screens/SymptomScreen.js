@@ -57,7 +57,9 @@ class SymptomScreen extends Component{
   }
 
   _goToDetailPatch = (symptom) => {
-    this.props.goToDetailPatch();
+    this.props.navigation.navigate('SymptomDetailPatch', {
+      time: symptom.time,
+    });
   }
 
   _goToDetailUser = (symptom) => {
@@ -80,12 +82,6 @@ class SymptomScreen extends Component{
       this._getSymptoms(id,token)
           .catch((e) =>{})
     })
-
-    PushNotificationIOS.scheduleLocalNotification({ 
-      fireDate: new Date(Date.now() + 60 * 1000).getTime(), 
-      alertTitle: '위험상황 감지!',
-      alertBody: '부정맥으로 의심되는 신호가 감지되었습니다!'
-    });
   }
 
   render(){

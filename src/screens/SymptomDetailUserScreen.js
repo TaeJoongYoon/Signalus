@@ -49,11 +49,14 @@ class SymptomDetailUserScreen extends Component{
 
     return(
       <View style={styles.container}>
+
+        {/* HEADER */}
         <Text style={styles.date}>{this._date(time)}</Text>
         <Text style={styles.time}>추가된 시간 : {this._time(time.substring(11))}</Text>
 
         <Divider style={{backgroundColor: disable, height: 1, marginTop: 10, marginBottom: 10}}/>
 
+        {/* Symptom List */}
         <Text style={styles.symptomListTitle}>느낀 증상 목록</Text>
         {_.map(symptoms, symptom => {
             return (

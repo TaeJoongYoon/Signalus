@@ -20,7 +20,7 @@ import { DISCONNECT_SUCCESS } from '../reducers/bluetooth/actionTypes';
 // String
 import { 
   HeaderVital,
-  ecgRawUUID, ppgHeartRate, ppgSpO2,
+  ecgRawUUID, emergencyUUID, ppgHeartRateUUID, ppgSpO2UUID,
   LabelNowBPM, LabelBPMHighLow, LabelSpO2, LabelStress,
  } from '../constants/string';
  // Colors
@@ -45,7 +45,9 @@ class VitalScreen extends Component{
   constructor(props){
     super(props)
     this.state = {
-      data: [],
+      id:'',
+      token:'',
+      data:[],
       time:'',
       bpm:80,
       bpmHigh:120,
@@ -55,6 +57,7 @@ class VitalScreen extends Component{
       connected: false,
       error: false,
       errorMsg: '',
+      flag: false,
     };
 
     PushNotificationIOS.requestPermissions();
@@ -119,7 +122,7 @@ class VitalScreen extends Component{
   }
 
   _notifyCharacteristc = (characteristic) => {
-    const { BluetoothActions } = this.props;
+    const { SymptomActions } = this.props;
 
     switch(characteristic.uuid){
       case ecgRawUUID:
@@ -127,9 +130,9 @@ class VitalScreen extends Component{
         if(error) this.setState({error: true, errorMsg: error.message})
         if(c){
           const value = getDecValue(c)
-          console.log(`---------------------------------------------------
-          Characteristic UUID : ${characteristic.uuid}
-          Notify Value : ${value}`);
+          // console.log(`---------------------------------------------------
+          // Characteristic UUID : ${characteristic.uuid}
+          // Notify Value : ${value}`);
 
           if(this.state.data.length > 100){
             this.setState({
@@ -150,14 +153,44 @@ class VitalScreen extends Component{
                         }
               )});
           }
-
-          try{
-            BluetoothActions.signal(this.state.data)
-          }catch(e){console.log(e)}
         }
       });
       break
-      case ppgHeartRate:
+      case emergencyUUID:
+      this._emergencySubcription = characteristic.monitor((error, c) => {
+        if(error) this.setState({error: true, errorMsg: error.message})
+        if(c){
+          if(this.state.flag){
+            const value = getDecValue(c)
+            console.log(`---------------------------------------------------
+            Characteristic UUID : ${characteristic.uuid}
+            Notify Value : ${value}`);
+
+            alert("부정맥으로 의심되는 신호가 수신되었습니다!")
+
+            const path = RNFS.DocumentDirectoryPath + '/signal.txt';
+            const now = getTimeForNow();
+            try{
+            SymptomActions.addSymptom(this.state.id, ["부정맥"], now, "patch", this.state.token)
+            }catch(e){}
+
+            RNFS.writeFile(path, signalToString(this.state.data), 'utf8')
+            .then((success) => {
+              console.log('FILE WRITTEN!');
+              this._addsignal(this.state.id, path, now, this.state.token)
+                  .catch((e) =>{})
+            })
+            .catch((err) => {
+              console.log(err.message);
+            });
+          }
+          else{
+            this.setState({flag: true})
+          }
+        }
+      });
+      break
+      case ppgHeartRateUUID:
       this._ppgHeartRateSubcription = characteristic.monitor((error, c) => {
         if(error) this.setState({error: true, errorMsg: error.message})
         if(c){
@@ -167,10 +200,17 @@ class VitalScreen extends Component{
           Notify Value : ${value}`);
           this.setState({bpm: value})
 
+          if(value > bpmHigh){ // Set BPM High
+            this.setState({bpmHigh: value})
+          }
+
+          if(value < bpmLow){ // Set BPM Low
+            this.setState({bpmLow: value})
+          }
         }
       });
       break
-      case ppgSpO2:
+      case ppgSpO2UUID:
       this._ppgSpO2Subcription = characteristic.monitor((error, c) => {
         if(error) this.setState({error: true, errorMsg: error.message})
         if(c){
@@ -179,15 +219,6 @@ class VitalScreen extends Component{
           Characteristic UUID : ${characteristic.uuid}
           Notify Value : ${value}`);
           this.setState({SpO2: value})
-          
-          if(value > bpmHigh){ // Set BPM High
-            this.setState({bpmHigh: value})
-          }
-
-          if(value < bpmLow){ // Set BPM Low
-            this.setState({bpmLow: value})
-          }
-
         }
       });
       default:
@@ -213,32 +244,10 @@ class VitalScreen extends Component{
       return i;
   }
 
-  _add = () => {
-    const path = RNFS.DocumentDirectoryPath + '/signal.txt';
-   
-    RNFS.writeFile(path, signalToString(data), 'utf8')
-    .then((success) => {
-      console.log('FILE WRITTEN!');
-      
-
-      this._addsignal(this.state.id, path, getTimeForNow(), this.state.token)
-          .catch((e) =>{})
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
-  }
-
   _addsignal = async (id, signalFile, time, token) => {
     const { SymptomActions } = this.props;
     
     return await SymptomActions.addSignal(id, signalFile, time, token);
-  }
-
-  _getsignal = async (id, time, token) => {
-    const { SymptomActions } = this.props;
-    
-    return await SymptomActions.getSignal(id, time, token);
   }
 
   // LifeCyle
@@ -250,9 +259,6 @@ class VitalScreen extends Component{
       token = value[1][1];
       bpmHigh =  value[2][1];
       bpmLow =  value[3][1];
-
-      this._getsignal(id, getTimeForNowPath('2018.11.18_20:32:17'), token)
-          .catch((e) =>{})
 
       this.setState({id: id, token: token})
       if(bpmHigh != null){
@@ -267,10 +273,6 @@ class VitalScreen extends Component{
     
     navigation.setParams({ clickCalendar: this._goToCalendar });
     if(isConnected) this._connectToDevice(device);
-  }
-
-  componentWillReceiveProps(nextProps){
-    console.log(stringToSignal(nextProps.signal))
   }
 
   render(){
@@ -352,6 +354,7 @@ class VitalScreen extends Component{
       console.log(device)
       this._subscription.remove();
       this._ppgRawSubcription.remove();
+      this._emergencySubcription.remove();
       this._ppgHeartRateSubcription.remove();
       this._ppgSpO2Subcription.remove();
     })
@@ -361,10 +364,8 @@ class VitalScreen extends Component{
 
 export default connect(
   (state) => ({
-    signal: state.symptom.signal,
     device : state.bluetooth.device,
     isConnected: state.bluetooth.isConnected,
-    
   }),
   (dispatch) => ({
     SymptomActions: bindActionCreators(symptomActions, dispatch),

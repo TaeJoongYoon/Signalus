@@ -1,8 +1,9 @@
 // Bluetooth
 export const targetDeviceName = "24Patch";
-export const ecgRawUUID = "00002a37-0000-1000-8000-00805f9b34fb";
-export const ppgHeartRate = "00002a19-0000-1000-8000-00805f9b34fb";
-export const ppgSpO2 = "00002a38-0000-1000-8000-00805f9b34fb";
+export const ecgRawUUID = "00002a06-0000-1000-8000-00805f9b34fb";
+export const emergencyUUID = "00002a3f-0000-1000-8000-00805f9b34fb";
+export const ppgHeartRateUUID = "00002a37-0000-1000-8000-00805f9b34fb";
+export const ppgSpO2UUID = "00002a39-0000-1000-8000-00805f9b34fb";
 // Header
 export const HeaderConsent = "회원가입 1/2";
 export const HeaderRegister = "회원가입 2/2";
